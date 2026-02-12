@@ -1,0 +1,99 @@
+{
+  "timeline_posts": [
+    {
+      "id": "100001",
+      "handle": "sama",
+      "text": "We are rolling out a new agent benchmark next week. Early signals suggest much stronger tool-use reliability.",
+      "created_at": "2026-02-12T08:10:00Z",
+      "public_metrics": {
+        "like_count": 5200,
+        "retweet_count": 910,
+        "reply_count": 460,
+        "quote_count": 140,
+        "bookmark_count": 600,
+        "impression_count": 410000
+      },
+      "url": "https://x.com/sama/status/100001"
+    },
+    {
+      "id": "100002",
+      "handle": "karpathy",
+      "text": "Interesting wave of tiny reasoning models. Inference-time scaling is becoming a practical engineering knob.",
+      "created_at": "2026-02-12T06:40:00Z",
+      "public_metrics": {
+        "like_count": 6100,
+        "retweet_count": 1100,
+        "reply_count": 330,
+        "quote_count": 220,
+        "bookmark_count": 840,
+        "impression_count": 530000
+      },
+      "url": "https://x.com/karpathy/status/100002"
+    },
+    {
+      "id": "100003",
+      "handle": "AndrewYNg",
+      "text": "Enterprise teams should treat evals as product telemetry, not one-time reports.",
+      "created_at": "2026-02-11T22:20:00Z",
+      "public_metrics": {
+        "like_count": 2800,
+        "retweet_count": 490,
+        "reply_count": 170,
+        "quote_count": 90,
+        "bookmark_count": 410,
+        "impression_count": 210000
+      },
+      "url": "https://x.com/AndrewYNg/status/100003"
+    }
+  ],
+  "topic_posts": [
+    {
+      "id": "200001",
+      "query": "agentic AI OR autonomous agents lang:en -is:retweet",
+      "handle": "openrobotics",
+      "text": "Agentic planning + tool APIs now running fully on edge hardware demos.",
+      "created_at": "2026-02-12T05:30:00Z",
+      "public_metrics": {
+        "like_count": 1600,
+        "retweet_count": 350,
+        "reply_count": 90,
+        "quote_count": 60,
+        "bookmark_count": 180,
+        "impression_count": 120000
+      },
+      "url": "https://x.com/openrobotics/status/200001"
+    },
+    {
+      "id": "200002",
+      "query": "RLHF OR RLVR OR reinforcement learning for LLM lang:en -is:retweet",
+      "handle": "lab_notes",
+      "text": "RLVR runs show better long-context stability than pure SFT in our internal evals.",
+      "created_at": "2026-02-12T03:10:00Z",
+      "public_metrics": {
+        "like_count": 1900,
+        "retweet_count": 420,
+        "reply_count": 130,
+        "quote_count": 75,
+        "bookmark_count": 260,
+        "impression_count": 150000
+      },
+      "url": "https://x.com/lab_notes/status/200002"
+    },
+    {
+      "id": "200003",
+      "query": "scaling law OR test-time compute lang:en -is:retweet",
+      "handle": "research_ops",
+      "text": "Test-time compute budgets are now discussed in product planning meetings, not just research review.",
+      "created_at": "2026-02-11T20:45:00Z",
+      "public_metrics": {
+        "like_count": 1300,
+        "retweet_count": 290,
+        "reply_count": 110,
+        "quote_count": 50,
+        "bookmark_count": 170,
+        "impression_count": 98000
+      },
+      "url": "https://x.com/research_ops/status/200003"
+    }
+  ]
+}

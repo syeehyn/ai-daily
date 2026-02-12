@@ -1,0 +1,6 @@
+# Local-only runtime data
+issues/*/x-snapshot.md
+issues/*/x-snapshot.json
+
+# OS
+.DS_Store

@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import datetime as dt
 import html
+import json
 import re
 from collections import Counter
 from pathlib import Path
@@ -18,6 +19,7 @@ ARCHIVE_INDEX_PATH = ROOT / "index.html"
 ARCHIVE_START = "<!-- ARCHIVE_LIST_START -->"
 ARCHIVE_END = "<!-- ARCHIVE_LIST_END -->"
 ISSUE_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
+LOCAL_X_DIR = Path.home() / ".openclaw" / "local" / "ai-daily" / "x-snapshots"
 URL_RE = re.compile(r'https?://[^\s)>"]+')
 PAPER_ID_RE = re.compile(r"(\d{4}\.\d{4,5}(?:v\d+)?)")
 
@@ -51,6 +53,55 @@ def clean_markdown_text(text: str) -> str:
     text = re.sub(r"\*(.*?)\*", r"\1", text)
     text = re.sub(r"`(.*?)`", r"\1", text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+def markdown_inline_to_html(text: str) -> str:
+    escaped = escape(text)
+    escaped = re.sub(r"`([^`]+)`", r"<code>\1</code>", escaped)
+    escaped = re.sub(r"\*\*([^*]+)\*\*", r"<strong>\1</strong>", escaped)
+    escaped = re.sub(r"\*([^*]+)\*", r"<em>\1</em>", escaped)
+    escaped = re.sub(
+        r"(https?://[^\s<]+)",
+        lambda m: f'<a href="{m.group(1)}" target="_blank" rel="noopener">{m.group(1)}</a>',
+        escaped,
+    )
+    return escaped
+
+
+def markdown_to_html(markdown_text: str) -> str:
+    lines = markdown_text.splitlines()
+    html_lines: List[str] = []
+    in_list = False
+
+    def close_list() -> None:
+        nonlocal in_list
+        if in_list:
+            html_lines.append("</ul>")
+            in_list = False
+
+    for raw in lines:
+        line = raw.rstrip()
+        stripped = line.strip()
+        if not stripped:
+            close_list()
+            continue
+        if stripped.startswith("# "):
+            continue
+        if stripped.startswith("## "):
+            close_list()
+            html_lines.append(f"<h3>{markdown_inline_to_html(stripped[3:].strip())}</h3>")
+            continue
+        if stripped.startswith(("- ", "* ")):
+            if not in_list:
+                html_lines.append("<ul>")
+                in_list = True
+            html_lines.append(f"<li>{markdown_inline_to_html(stripped[2:].strip())}</li>")
+            continue
+        close_list()
+        html_lines.append(f"<p>{markdown_inline_to_html(stripped)}</p>")
+
+    close_list()
+    return "".join(html_lines)
 
 
 def extract_paper_id(*values: str) -> str:
@@ -425,6 +476,53 @@ def build_takeaways(papers: List[Dict[str, object]]) -> str:
     return "<ul>" + "".join(items) + "</ul>"
 
 
+def render_x_snapshot(issue_dir: Path, issue_date: str) -> str:
+    md_path = issue_dir / "x-snapshot.md"
+    json_path = issue_dir / "x-snapshot.json"
+
+    if not md_path.exists() and not json_path.exists():
+        local_root = Path(__import__("os").environ.get("AI_DAILY_LOCAL_X_DIR", str(LOCAL_X_DIR))).expanduser()
+        local_issue_dir = local_root / issue_date
+        md_path = local_issue_dir / "x-snapshot.md"
+        json_path = local_issue_dir / "x-snapshot.json"
+
+    if not md_path.exists() and not json_path.exists():
+        return ""
+
+    if md_path.exists():
+        body = markdown_to_html(md_path.read_text(encoding="utf-8"))
+        return (
+            '<section class="x-snapshot">'
+            '<h2 class="section-title">X Daily Snapshot</h2>'
+            f'<article class="x-snapshot-card">{body}</article>'
+            "</section>"
+        )
+
+    payload = json.loads(json_path.read_text(encoding="utf-8"))
+    sections = payload.get("sections", {}) if isinstance(payload, dict) else {}
+    block = ['<section class="x-snapshot"><h2 class="section-title">X Daily Snapshot</h2><article class="x-snapshot-card">']
+    for title in ["热门博主动态", "热门话题", "今日关键观点", "可跟进线索"]:
+        items = sections.get(title, [])
+        block.append(f"<h3>{escape(title)}</h3>")
+        block.append("<ul>")
+        if isinstance(items, list) and items:
+            for item in items[:8]:
+                if isinstance(item, str):
+                    block.append(f"<li>{escape(item)}</li>")
+                elif isinstance(item, dict):
+                    text = item.get("text") or item.get("lead_text") or json.dumps(item, ensure_ascii=False)
+                    handle = item.get("handle") or item.get("lead_handle") or ""
+                    prefix = f"@{handle}: " if handle else ""
+                    block.append(f"<li>{escape(prefix + str(text))}</li>")
+                else:
+                    block.append(f"<li>{escape(str(item))}</li>")
+        else:
+            block.append("<li>暂无数据</li>")
+        block.append("</ul>")
+    block.append("</article></section>")
+    return "".join(block)
+
+
 def replace_tokens(template: str, values: Dict[str, str]) -> str:
     rendered = template
     for key, value in values.items():
@@ -444,6 +542,7 @@ def render_issue_page(issue_date: str, papers: List[Dict[str, object]], template
         "PAPER_COUNT": str(len(papers)),
         "TAGLINE": "Frontier AI Papers, Curated as an Editorial Daily Brief",
         "TOP_PAPERS": cards,
+        "X_DAILY_SNAPSHOT": render_x_snapshot(ISSUES_DIR / issue_date, issue_date),
         "FOCUS_AREA": build_focus_section(top_papers),
         "TAKEAWAYS": build_takeaways(top_papers),
     }

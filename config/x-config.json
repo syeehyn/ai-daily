@@ -1,0 +1,27 @@
+{
+  "influencer_handles": [
+    "sama",
+    "karpathy",
+    "ylecun",
+    "AndrewYNg",
+    "demishassabis"
+  ],
+  "topic_queries": [
+    "agentic AI OR autonomous agents lang:en -is:retweet",
+    "scaling law OR test-time compute lang:en -is:retweet",
+    "RLHF OR RLVR OR reinforcement learning for LLM lang:en -is:retweet",
+    "multimodal model release lang:en -is:retweet"
+  ],
+  "ranking_weights": {
+    "engagement": 0.7,
+    "recency": 0.3
+  },
+  "output": {
+    "timeline_tweets_per_user": 5,
+    "search_results_per_query": 10,
+    "top_influencer_posts": 8,
+    "top_topics": 6,
+    "key_viewpoints": 5,
+    "followup_leads": 5
+  }
+}

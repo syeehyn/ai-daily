@@ -103,6 +103,36 @@
       max-width: 100%;
     }
 
+    .x-snapshot {
+      margin-top: 24px;
+    }
+
+    .x-snapshot-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 20px 22px;
+      box-shadow: var(--shadow);
+    }
+
+    .x-snapshot-card h3 {
+      margin: 14px 0 6px;
+      font-family: "IBM Plex Serif", "Noto Serif CJK SC", serif;
+      font-size: 1.08rem;
+    }
+
+    .x-snapshot-card p,
+    .x-snapshot-card li {
+      margin: 0 0 6px;
+      color: #2a2825;
+      font-size: 0.95rem;
+    }
+
+    .x-snapshot-card ul {
+      margin: 0 0 8px;
+      padding-left: 1.1rem;
+    }
+
     .paper-card {
       background: var(--surface);
       border: 1px solid var(--line);
@@ -339,6 +369,7 @@
       <section class="paper-list">
         <h2 class="section-title">Top 10 Papers</h2>
         {{TOP_PAPERS}}
+        {{X_DAILY_SNAPSHOT}}
       </section>
 
       <aside class="sidebar">
