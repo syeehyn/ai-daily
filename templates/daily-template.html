@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{PAGE_TITLE}}</title>
+  <meta name="description" content="AI Daily {{DATE}} 论文精选" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0: #060b1c;
+      --bg-1: #0d1230;
+      --bg-2: #151d46;
+      --text: #f4f7ff;
+      --muted: #9caad6;
+      --accent-cyan: #56ffe0;
+      --accent-neon: #6dff8b;
+      --accent-violet: #9b78ff;
+      --glass: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(109, 255, 139, 0.28);
+      --shadow: 0 20px 50px rgba(4, 12, 40, 0.65);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(86, 255, 224, 0.15), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(155, 120, 255, 0.2), transparent 35%),
+        linear-gradient(165deg, var(--bg-0), var(--bg-1) 55%, var(--bg-2));
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 24px 18px 60px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 26px 24px;
+      margin-bottom: 22px;
+      background: linear-gradient(120deg, rgba(9, 15, 45, 0.9), rgba(30, 35, 80, 0.75));
+      border: 1px solid rgba(86, 255, 224, 0.3);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 75% 15%, rgba(109, 255, 139, 0.24), transparent 38%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace;
+      color: var(--accent-cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3.6vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88rem;
+    }
+
+    .hero-meta strong { color: var(--accent-neon); }
+
+    .section-title {
+      font-size: 1.28rem;
+      margin: 28px 0 14px;
+      letter-spacing: 0.03em;
+    }
+
+    .papers-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .paper-card,
+    .focus-card,
+    .takeaway {
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeIn 0.65s ease forwards;
+    }
+
+    .paper-card {
+      padding: 18px;
+      border-color: var(--glass-border);
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 1px rgba(86, 255, 224, 0.55), 0 24px 42px rgba(3, 8, 30, 0.8);
+    }
+
+    .paper-rank {
+      font-family: "JetBrains Mono", monospace;
+      color: var(--accent-neon);
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+
+    .paper-title {
+      font-size: 1.04rem;
+      margin: 0 0 7px;
+      line-height: 1.35;
+    }
+
+    .paper-authors,
+    .paper-brief { margin: 0 0 10px; color: var(--muted); font-size: 0.94rem; }
+
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 11px; }
+
+    .tag {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.73rem;
+      padding: 2px 8px;
+      border: 1px solid rgba(155, 120, 255, 0.5);
+      border-radius: 999px;
+      color: #d8cdff;
+      background: rgba(155, 120, 255, 0.14);
+    }
+
+    a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(86, 255, 224, 0.45);
+    }
+
+    a:hover { color: var(--accent-neon); border-bottom-color: rgba(109, 255, 139, 0.75); }
+
+    .focus-card,
+    .takeaway {
+      padding: 20px;
+      margin-top: 10px;
+    }
+
+    .focus-card {
+      border-color: rgba(109, 255, 139, 0.44);
+      background: linear-gradient(140deg, rgba(18, 27, 59, 0.66), rgba(20, 54, 54, 0.43));
+    }
+
+    .focus-title {
+      margin: 0 0 8px;
+      color: var(--accent-neon);
+      font-size: 1.08rem;
+      letter-spacing: 0.03em;
+    }
+
+    .takeaway {
+      border-color: rgba(86, 255, 224, 0.42);
+      background: linear-gradient(140deg, rgba(20, 30, 70, 0.7), rgba(32, 23, 66, 0.5));
+    }
+
+    .takeaway ul {
+      margin: 8px 0 0;
+      padding-left: 1.1rem;
+      color: #dbe4ff;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 16px 14px 40px; }
+      .hero { padding: 18px 16px; border-radius: 18px; }
+      .section-title { font-size: 1.12rem; }
+      .paper-card,
+      .focus-card,
+      .takeaway { border-radius: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">AI DAILY / SCI-FI EDITION</p>
+      <h1>{{TAGLINE}}</h1>
+      <div class="hero-meta">
+        <span>DATE <strong>{{DATE}}</strong></span>
+        <span>PAPERS <strong>{{PAPER_COUNT}}</strong></span>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Top 10 Papers</h2>
+      <div class="papers-grid">{{TOP_PAPERS}}</div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Focus Area</h2>
+      <article class="focus-card">{{FOCUS_AREA}}</article>
+    </section>
+
+    <section>
+      <h2 class="section-title">Takeaway</h2>
+      <article class="takeaway">{{TAKEAWAYS}}</article>
+    </section>
+
+    <footer>
+      <span>AI Daily archive terminal</span>
+      <a href="../../index.html">Return to Archive</a>
+    </footer>
+  </main>
+
+  <script>
+    const cards = document.querySelectorAll('.paper-card, .focus-card, .takeaway');
+    cards.forEach((card, idx) => {
+      card.style.animationDelay = `${Math.min(idx * 65, 640)}ms`;
+    });
+  </script>
+</body>
+</html>

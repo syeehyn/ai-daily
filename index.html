@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Daily Archive</title>
+  <meta name="description" content="AI Daily 归档与每日论文精选" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0: #050915;
+      --bg-1: #0d1331;
+      --bg-2: #181f4a;
+      --text: #f5f7ff;
+      --muted: #9eabd5;
+      --accent-cyan: #53f4ff;
+      --accent-neon: #74ff8a;
+      --accent-violet: #9b78ff;
+      --card: rgba(255, 255, 255, 0.07);
+      --card-border: rgba(83, 244, 255, 0.25);
+      --shadow: 0 16px 38px rgba(5, 10, 30, 0.68);
+      --radius: 16px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Space Grotesk", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 8%, rgba(83, 244, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 92% 15%, rgba(155, 120, 255, 0.2), transparent 30%),
+        linear-gradient(165deg, var(--bg-0), var(--bg-1), var(--bg-2));
+      min-height: 100vh;
+    }
+
+    .shell {
+      max-width: 1080px;
+      margin: 0 auto;
+      padding: 24px 18px 52px;
+    }
+
+    .hero {
+      border-radius: 20px;
+      border: 1px solid rgba(116, 255, 138, 0.34);
+      background: linear-gradient(125deg, rgba(11, 19, 52, 0.9), rgba(24, 34, 82, 0.75));
+      box-shadow: var(--shadow);
+      padding: 24px;
+      margin-bottom: 18px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 80% 12%, rgba(116, 255, 138, 0.18), transparent 34%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      margin: 0;
+      font-family: "JetBrains Mono", monospace;
+      color: var(--accent-cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 8px 0 0;
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      line-height: 1.2;
+    }
+
+    .subtitle {
+      margin: 10px 0 0;
+      color: var(--muted);
+      max-width: 70ch;
+    }
+
+    .archive-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      margin-top: 8px;
+    }
+
+    .issue-card {
+      display: block;
+      text-decoration: none;
+      color: inherit;
+      padding: 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--card-border);
+      background: var(--card);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(7px);
+      transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
+      opacity: 0;
+      transform: translateY(16px);
+      animation: rise 0.6s ease forwards;
+    }
+
+    .issue-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-neon);
+      box-shadow: 0 0 0 1px rgba(116, 255, 138, 0.48), 0 18px 34px rgba(4, 8, 25, 0.75);
+    }
+
+    .issue-date {
+      font-family: "JetBrains Mono", monospace;
+      color: var(--accent-cyan);
+      font-size: 0.84rem;
+      margin-bottom: 8px;
+    }
+
+    .issue-topic {
+      color: #d6ddff;
+      font-size: 0.94rem;
+      margin: 8px 0 0;
+    }
+
+    .issue-count {
+      color: var(--muted);
+      font-size: 0.88rem;
+      margin: 0;
+    }
+
+    .empty {
+      border: 1px dashed rgba(158, 171, 213, 0.5);
+      border-radius: var(--radius);
+      padding: 18px;
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    @keyframes rise {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 16px 14px 38px; }
+      .hero { padding: 18px 16px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">AI DAILY / ARCHIVE</p>
+      <h1>每日论文档案库</h1>
+      <p class="subtitle">聚焦 Agent RL / Scaling RL 与前沿智能体研究，按日期浏览每日 Top 论文与深度解读。</p>
+    </section>
+
+    <section class="archive-grid" id="archive-grid">
+      <!-- ARCHIVE_LIST_START -->
+      <div class="empty">暂无已发布 issue，运行 <code>python3 scripts/build-site.py</code> 后会自动生成。</div>
+      <!-- ARCHIVE_LIST_END -->
+    </section>
+  </main>
+
+  <script>
+    const items = document.querySelectorAll('.issue-card');
+    items.forEach((item, idx) => {
+      item.style.animationDelay = `${Math.min(idx * 70, 700)}ms`;
+    });
+  </script>
+</body>
+</html>
