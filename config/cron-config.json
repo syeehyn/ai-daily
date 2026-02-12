@@ -1,0 +1,37 @@
+{
+  "schedule": "0 8 * * *",
+  "timezone": "America/Los_Angeles",
+  "source": "https://huggingface.co/api/daily_papers?limit=50",
+  "focus_areas": ["Agent RL", "Scaling RL", "RLVR", "GRPO", "Multi-agent", "Tool-use"],
+  "output": {
+    "issues_dir": "issues",
+    "per_paper_markdown": true,
+    "generate_figures": true,
+    "build_webpage": true,
+    "theme": "sci-fi-magazine",
+    "deploy_to": "github-pages"
+  },
+  "parallel_agents": {
+    "paper_reader_count": 5,
+    "max_concurrent": 8
+  },
+  "per_paper_summary": {
+    "sections": [
+      "title_and_authors",
+      "one_sentence_summary",
+      "key_innovation",
+      "method_overview",
+      "main_results",
+      "reproduction_guide",
+      "figures_and_tables",
+      "takeaway_for_practitioners"
+    ],
+    "max_tokens_per_paper": 2000
+  },
+  "daily_digest": {
+    "top_n_papers": 10,
+    "include_all_papers_brief": true,
+    "generate_cover_image": true,
+    "highlight_focus_areas": true
+  }
+}
