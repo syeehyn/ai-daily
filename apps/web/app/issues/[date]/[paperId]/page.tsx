@@ -13,6 +13,12 @@ import { Button, Chip, FooterColumns, RecommendationCard, TextLink } from "@/com
 import { getIssues, getPaper } from "@/lib/content";
 import { parseBlocks } from "@/lib/markdown";
 
+export function generateStaticParams() {
+  return getIssues().flatMap((issue) => issue.papers.map((paper) => ({ date: issue.date, paperId: paper.id })));
+}
+
+export const dynamicParams = false;
+
 export default async function ArticlePage({
   params
 }: {

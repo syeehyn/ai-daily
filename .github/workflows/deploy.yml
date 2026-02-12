@@ -38,18 +38,26 @@ jobs:
             python3 scripts/fetch-x-snapshot.py --mode mock --date "$ISSUE_DATE" --sync-to-issues
           fi
 
-      - name: Build static site
+      - name: Build static data site inputs
         run: |
           python3 scripts/build-site.py
-          rm -rf _site
-          mkdir -p _site
-          cp -R index.html issues _site/
-          touch _site/.nojekyll
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Build Next.js static export
+        run: |
+          cd apps/web
+          npm ci
+          npm run build
+          touch out/.nojekyll
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '_site'
+          path: 'apps/web/out'
 
       - name: Deploy to GitHub Pages
         id: deployment

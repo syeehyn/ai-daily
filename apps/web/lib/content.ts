@@ -58,7 +58,7 @@ function parsePaper(date: string, file: string): Paper {
   let image: string | undefined;
   if (fs.existsSync(figuresDir)) {
     const found = fs.readdirSync(figuresDir).find((name) => name.startsWith(`${id}.`));
-    if (found) image = `/api/assets/${date}/figures/${found}`;
+    if (found) image = `/issues/${date}/assets/figures/${found}`;
   }
 
   return {
