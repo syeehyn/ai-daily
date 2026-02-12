@@ -61,7 +61,7 @@ def load_figures_manifest(issue_dir: Path) -> Dict[str, str]:
   if isinstance(papers, dict):
     for paper_id, item in papers.items():
       if isinstance(item, dict) and item.get("stored_path"):
-        out[str(paper_id)] = f"/api/assets/{issue_dir.name}/figures/{Path(str(item['stored_path'])).name}"
+        out[str(paper_id)] = f"/issues/{issue_dir.name}/assets/figures/{Path(str(item['stored_path'])).name}"
   return out
 
 
