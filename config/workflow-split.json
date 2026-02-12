@@ -1,0 +1,22 @@
+{
+  "version": "2.0",
+  "owners": {
+    "openclaw": [
+      "source ingestion",
+      "x snapshot fetch",
+      "paper image fetching with fallback",
+      "issue-data.json adapter generation"
+    ],
+    "codex": [
+      "next.js website generation",
+      "component/design iteration",
+      "accessibility and frontend build checks"
+    ]
+  },
+  "paths": {
+    "issues_root": "issues/YYYY-MM-DD",
+    "paper_images": "issues/YYYY-MM-DD/assets/figures",
+    "frontend_adapter": "issues/YYYY-MM-DD/issue-data.json",
+    "web_app": "apps/web"
+  }
+}

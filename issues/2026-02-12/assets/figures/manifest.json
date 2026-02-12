@@ -1,0 +1,90 @@
+{
+  "issue_date": "2026-02-12",
+  "generated_at": "2026-02-12T18:58:26.689009+00:00",
+  "strategy": [
+    "Try Hugging Face paper page og:image / metadata",
+    "Fallback to generated placeholder thumb"
+  ],
+  "papers": {
+    "2602.00462": {
+      "paper_id": "2602.00462",
+      "paper_file": "2602.00462.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.00462",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.00462.svg"
+    },
+    "2602.04935": {
+      "paper_id": "2602.04935",
+      "paper_file": "2602.04935.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.04935",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.04935.svg"
+    },
+    "2602.08253": {
+      "paper_id": "2602.08253",
+      "paper_file": "2602.08253.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.08253",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.08253.svg"
+    },
+    "2602.08711": {
+      "paper_id": "2602.08711",
+      "paper_file": "2602.08711.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.08711",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.08711.svg"
+    },
+    "2602.09000": {
+      "paper_id": "2602.09000",
+      "paper_file": "2602.09000.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.09000",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.09000.svg"
+    },
+    "2602.10177": {
+      "paper_id": "2602.10177",
+      "paper_file": "2602.10177.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.10177",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.10177.svg"
+    },
+    "2602.10560": {
+      "paper_id": "2602.10560",
+      "paper_file": "2602.10560.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.10560",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.10560.svg"
+    },
+    "2602.10604": {
+      "paper_id": "2602.10604",
+      "paper_file": "2602.10604.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.10604",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.10604.svg"
+    },
+    "2602.11124": {
+      "paper_id": "2602.11124",
+      "paper_file": "2602.11124.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.11124",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.11124.svg"
+    },
+    "2602.11144": {
+      "paper_id": "2602.11144",
+      "paper_file": "2602.11144.md",
+      "source": "generated_placeholder",
+      "hf_page_url": "https://huggingface.co/papers/2602.11144",
+      "image_url": "",
+      "stored_path": "assets/figures/2602.11144.svg"
+    }
+  }
+}
