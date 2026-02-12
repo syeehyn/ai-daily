@@ -7,49 +7,44 @@
   <meta name="description" content="AI Daily 归档与每日论文精选" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Noto+Serif+SC:wght@500;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-0: #050915;
-      --bg-1: #0d1331;
-      --bg-2: #181f4a;
-      --text: #f5f7ff;
-      --muted: #9eabd5;
-      --accent-cyan: #53f4ff;
-      --accent-neon: #74ff8a;
-      --accent-violet: #9b78ff;
-      --card: rgba(255, 255, 255, 0.07);
-      --card-border: rgba(83, 244, 255, 0.25);
-      --shadow: 0 16px 38px rgba(5, 10, 30, 0.68);
-      --radius: 16px;
+      --bg: #f5f3ef;
+      --surface: #ffffff;
+      --surface-soft: #fbfaf8;
+      --text: #141414;
+      --muted: #5f5b54;
+      --line: #e3dfd8;
+      --line-strong: #c9c2b7;
+      --accent: #1f4f73;
+      --card-shadow: 0 10px 25px rgba(20, 20, 20, 0.06);
+      --radius: 12px;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: "Space Grotesk", sans-serif;
+      font-family: "Manrope", "Noto Sans SC", sans-serif;
       color: var(--text);
-      background:
-        radial-gradient(circle at 10% 8%, rgba(83, 244, 255, 0.14), transparent 28%),
-        radial-gradient(circle at 92% 15%, rgba(155, 120, 255, 0.2), transparent 30%),
-        linear-gradient(165deg, var(--bg-0), var(--bg-1), var(--bg-2));
+      background: linear-gradient(180deg, #faf9f6 0%, var(--bg) 100%);
       min-height: 100vh;
     }
 
     .shell {
-      max-width: 1080px;
+      max-width: 980px;
       margin: 0 auto;
-      padding: 24px 18px 52px;
+      padding: 40px 20px 72px;
     }
 
     .hero {
-      border-radius: 20px;
-      border: 1px solid rgba(116, 255, 138, 0.34);
-      background: linear-gradient(125deg, rgba(11, 19, 52, 0.9), rgba(24, 34, 82, 0.75));
-      box-shadow: var(--shadow);
-      padding: 24px;
-      margin-bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--surface);
+      box-shadow: var(--card-shadow);
+      padding: 34px;
+      margin-bottom: 22px;
       position: relative;
       overflow: hidden;
     }
@@ -57,96 +52,137 @@
     .hero::after {
       content: "";
       position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 80% 12%, rgba(116, 255, 138, 0.18), transparent 34%);
+      right: -70px;
+      top: -80px;
+      width: 220px;
+      height: 220px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(31, 79, 115, 0.16), rgba(31, 79, 115, 0));
       pointer-events: none;
     }
 
     .eyebrow {
       margin: 0;
-      font-family: "JetBrains Mono", monospace;
-      color: var(--accent-cyan);
-      font-size: 0.82rem;
-      letter-spacing: 0.11em;
+      color: var(--accent);
+      font-size: 0.78rem;
+      letter-spacing: 0.13em;
       text-transform: uppercase;
+      font-weight: 700;
     }
 
     h1 {
-      margin: 8px 0 0;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      line-height: 1.2;
+      margin: 14px 0 0;
+      font-family: "Noto Serif SC", serif;
+      font-size: clamp(2rem, 4.2vw, 3.15rem);
+      font-weight: 700;
+      line-height: 1.18;
+      letter-spacing: 0.01em;
     }
 
     .subtitle {
-      margin: 10px 0 0;
+      margin: 16px 0 0;
       color: var(--muted);
-      max-width: 70ch;
+      max-width: 68ch;
+      line-height: 1.75;
+      font-size: 1.02rem;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 26px 0 12px;
+    }
+
+    .section-title {
+      margin: 0;
+      font-family: "Noto Serif SC", serif;
+      font-size: clamp(1.35rem, 2.3vw, 1.7rem);
+      letter-spacing: 0.01em;
+    }
+
+    .section-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 0.9rem;
     }
 
     .archive-grid {
       display: grid;
-      gap: 14px;
+      gap: 12px;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      margin-top: 8px;
     }
 
     .issue-card {
       display: block;
       text-decoration: none;
-      color: inherit;
-      padding: 16px;
+      color: var(--text);
+      padding: 18px 16px;
       border-radius: var(--radius);
-      border: 1px solid var(--card-border);
-      background: var(--card);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(7px);
-      transition: transform 200ms ease, border-color 200ms ease, box-shadow 200ms ease;
-      opacity: 0;
-      transform: translateY(16px);
-      animation: rise 0.6s ease forwards;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, var(--surface) 0%, var(--surface-soft) 100%);
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+      opacity: 0.001;
+      transform: translateY(8px);
     }
 
     .issue-card:hover {
-      transform: translateY(-5px);
-      border-color: var(--accent-neon);
-      box-shadow: 0 0 0 1px rgba(116, 255, 138, 0.48), 0 18px 34px rgba(4, 8, 25, 0.75);
+      transform: translateY(-2px);
+      border-color: var(--line-strong);
+      box-shadow: var(--card-shadow);
     }
 
     .issue-date {
-      font-family: "JetBrains Mono", monospace;
-      color: var(--accent-cyan);
-      font-size: 0.84rem;
-      margin-bottom: 8px;
+      color: var(--accent);
+      font-size: 0.85rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 10px;
+      font-weight: 700;
     }
 
     .issue-topic {
-      color: #d6ddff;
-      font-size: 0.94rem;
+      color: var(--muted);
+      font-size: 0.95rem;
       margin: 8px 0 0;
+      line-height: 1.6;
     }
 
     .issue-count {
       color: var(--muted);
-      font-size: 0.88rem;
+      font-size: 0.9rem;
       margin: 0;
     }
 
     .empty {
-      border: 1px dashed rgba(158, 171, 213, 0.5);
+      border: 1px dashed var(--line-strong);
       border-radius: var(--radius);
       padding: 18px;
       color: var(--muted);
       text-align: center;
-      background: rgba(255, 255, 255, 0.03);
+      background: var(--surface);
     }
 
-    @keyframes rise {
-      to { opacity: 1; transform: translateY(0); }
+    .issue-card.visible {
+      opacity: 1;
+      transform: translateY(0);
+      transition-duration: 420ms;
+    }
+
+    footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.83rem;
     }
 
     @media (max-width: 720px) {
-      .shell { padding: 16px 14px 38px; }
-      .hero { padding: 18px 16px; }
+      .shell { padding: 18px 14px 42px; }
+      .hero { padding: 24px 18px; }
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+      }
     }
   </style>
 </head>
@@ -158,17 +194,22 @@
       <p class="subtitle">聚焦 Agent RL / Scaling RL 与前沿智能体研究，按日期浏览每日 Top 论文与深度解读。</p>
     </section>
 
+    <section class="section-header">
+      <h2 class="section-title">Archive</h2>
+      <p class="section-note">按日期查看每日精选论文与主题分布</p>
+    </section>
     <section class="archive-grid" id="archive-grid">
       <!-- ARCHIVE_LIST_START -->
       <a class="issue-card" href="issues/2026-02-12/index.html"><div class="issue-date">2026-02-12</div><p class="issue-count">10 papers</p><p class="issue-topic">Top topics: Agent, Multimodal, RL</p></a>
       <!-- ARCHIVE_LIST_END -->
     </section>
+    <footer>AI Daily Archive</footer>
   </main>
 
   <script>
     const items = document.querySelectorAll('.issue-card');
     items.forEach((item, idx) => {
-      item.style.animationDelay = `${Math.min(idx * 70, 700)}ms`;
+      setTimeout(() => item.classList.add('visible'), Math.min(idx * 70, 700));
     });
   </script>
 </body>
