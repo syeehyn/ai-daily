@@ -27,6 +27,17 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      - name: Generate X snapshot (live if token present)
+        env:
+          X_BEARER_TOKEN: ${{ secrets.X_BEARER_TOKEN }}
+        run: |
+          ISSUE_DATE=$(date -u +%F)
+          if [ -n "${X_BEARER_TOKEN}" ]; then
+            python3 scripts/fetch-x-snapshot.py --mode live --date "$ISSUE_DATE" --sync-to-issues
+          else
+            python3 scripts/fetch-x-snapshot.py --mode mock --date "$ISSUE_DATE" --sync-to-issues
+          fi
+
       - name: Build static site
         run: |
           python3 scripts/build-site.py
