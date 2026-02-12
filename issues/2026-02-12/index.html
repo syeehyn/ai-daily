@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Daily 2026-02-12</title>
+  <meta name="description" content="AI Daily 2026-02-12 论文精选" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-0: #060b1c;
+      --bg-1: #0d1230;
+      --bg-2: #151d46;
+      --text: #f4f7ff;
+      --muted: #9caad6;
+      --accent-cyan: #56ffe0;
+      --accent-neon: #6dff8b;
+      --accent-violet: #9b78ff;
+      --glass: rgba(255, 255, 255, 0.07);
+      --glass-border: rgba(109, 255, 139, 0.28);
+      --shadow: 0 20px 50px rgba(4, 12, 40, 0.65);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      font-family: "Space Grotesk", sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(86, 255, 224, 0.15), transparent 35%),
+        radial-gradient(circle at 85% 20%, rgba(155, 120, 255, 0.2), transparent 35%),
+        linear-gradient(165deg, var(--bg-0), var(--bg-1) 55%, var(--bg-2));
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .shell {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 24px 18px 60px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 26px 24px;
+      margin-bottom: 22px;
+      background: linear-gradient(120deg, rgba(9, 15, 45, 0.9), rgba(30, 35, 80, 0.75));
+      border: 1px solid rgba(86, 255, 224, 0.3);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 75% 15%, rgba(109, 255, 139, 0.24), transparent 38%);
+      pointer-events: none;
+    }
+
+    .eyebrow {
+      font-family: "JetBrains Mono", monospace;
+      color: var(--accent-cyan);
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin: 0 0 10px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 3.6vw, 3rem);
+      line-height: 1.15;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      color: var(--muted);
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.88rem;
+    }
+
+    .hero-meta strong { color: var(--accent-neon); }
+
+    .section-title {
+      font-size: 1.28rem;
+      margin: 28px 0 14px;
+      letter-spacing: 0.03em;
+    }
+
+    .papers-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .paper-card,
+    .focus-card,
+    .takeaway {
+      background: var(--glass);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      opacity: 0;
+      transform: translateY(16px);
+      animation: fadeIn 0.65s ease forwards;
+    }
+
+    .paper-card {
+      padding: 18px;
+      border-color: var(--glass-border);
+      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+    }
+
+    .paper-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 0 1px rgba(86, 255, 224, 0.55), 0 24px 42px rgba(3, 8, 30, 0.8);
+    }
+
+    .paper-rank {
+      font-family: "JetBrains Mono", monospace;
+      color: var(--accent-neon);
+      font-size: 0.78rem;
+      margin-bottom: 8px;
+    }
+
+    .paper-title {
+      font-size: 1.04rem;
+      margin: 0 0 7px;
+      line-height: 1.35;
+    }
+
+    .paper-authors,
+    .paper-brief { margin: 0 0 10px; color: var(--muted); font-size: 0.94rem; }
+
+    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 11px; }
+
+    .tag {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 0.73rem;
+      padding: 2px 8px;
+      border: 1px solid rgba(155, 120, 255, 0.5);
+      border-radius: 999px;
+      color: #d8cdff;
+      background: rgba(155, 120, 255, 0.14);
+    }
+
+    a {
+      color: var(--accent-cyan);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(86, 255, 224, 0.45);
+    }
+
+    a:hover { color: var(--accent-neon); border-bottom-color: rgba(109, 255, 139, 0.75); }
+
+    .focus-card,
+    .takeaway {
+      padding: 20px;
+      margin-top: 10px;
+    }
+
+    .focus-card {
+      border-color: rgba(109, 255, 139, 0.44);
+      background: linear-gradient(140deg, rgba(18, 27, 59, 0.66), rgba(20, 54, 54, 0.43));
+    }
+
+    .focus-title {
+      margin: 0 0 8px;
+      color: var(--accent-neon);
+      font-size: 1.08rem;
+      letter-spacing: 0.03em;
+    }
+
+    .takeaway {
+      border-color: rgba(86, 255, 224, 0.42);
+      background: linear-gradient(140deg, rgba(20, 30, 70, 0.7), rgba(32, 23, 66, 0.5));
+    }
+
+    .takeaway ul {
+      margin: 8px 0 0;
+      padding-left: 1.1rem;
+      color: #dbe4ff;
+    }
+
+    footer {
+      margin-top: 30px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 720px) {
+      .shell { padding: 16px 14px 40px; }
+      .hero { padding: 18px 16px; border-radius: 18px; }
+      .section-title { font-size: 1.12rem; }
+      .paper-card,
+      .focus-card,
+      .takeaway { border-radius: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <p class="eyebrow">AI DAILY / SCI-FI EDITION</p>
+      <h1>Frontier AI Papers, Curated Like A Sci-Fi Journal</h1>
+      <div class="hero-meta">
+        <span>DATE <strong>2026-02-12</strong></span>
+        <span>PAPERS <strong>10</strong></span>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Top 10 Papers</h2>
+      <div class="papers-grid"><article class="paper-card"><div class="paper-rank">TOP 01</div><h3 class="paper-title">&quot;LatentLens: Revealing Highly Interpretable Visual Tokens in LLMs&quot;</h3><p class="paper-authors">&quot;Benno Krojer, Shravan Nayak, Oscar Mañas, Vaibhav Adlakha, Desmond Elliott, Siva Reddy, Marius Mosbach&quot;</p><p class="paper-brief">LatentLens 通过将视觉 token 的潜在表示与上下文化文本表示进行最近邻匹配，揭示了 VLM 中大多数视觉 token 在所有层都是可解释的。</p><div class="tags"><span class="tag">&quot;Interpretability&quot;</span><span class="tag">&quot;VLM&quot;</span><span class="tag">&quot;Visual Tokens&quot;</span><span class="tag">&quot;Representation Analysis&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.00462&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 02</div><h3 class="paper-title">&quot;ASA: Training-Free Representation Engineering for Tool-Calling Agents&quot;</h3><p class="paper-authors">&quot;Youjin Wang, Run Zhou, Rong Fu, Shuaishuai Cao, Hongwei Zeng, Jiaxuan Lu, Sicheng Fan, Jiaqiao Zhao, Liangming Pan&quot;</p><p class="paper-brief">ASA 发现 LLM 中间层已能完美解码工具使用意图但行为保守（&quot;懒惰代理&quot;问题），通过推理时单次中间层激活干预，仅需约 20KB 资产即可大幅提升工具调用 F1。</p><div class="tags"><span class="tag">&quot;Agent&quot;</span><span class="tag">&quot;Tool-Calling&quot;</span><span class="tag">&quot;Representation Engineering&quot;</span><span class="tag">&quot;Training-Free&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.04935&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 03</div><h3 class="paper-title">&quot;G-LNS: Generative Large Neighborhood Search for LLM-Based Automatic Heuristic Design&quot;</h3><p class="paper-authors">&quot;Baoyun Zhao, He Wang, Liang Zeng&quot;</p><p class="paper-brief">G-LNS 提出了一个生成式进化框架，利用 LLM 协同进化 LNS 的破坏-修复算子对，在 TSP 和 CVRP 上显著超越现有 LLM AHD 方法和经典求解器。</p><div class="tags"><span class="tag">&quot;LLM&quot;</span><span class="tag">&quot;Combinatorial Optimization&quot;</span><span class="tag">&quot;Heuristic Design&quot;</span><span class="tag">&quot;LNS&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.08253&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 04</div><h3 class="paper-title">&quot;TimeChat-Captioner: Scripting Multi-Scene Videos with Time-Aware and Structural Audio-Visual Captions&quot;</h3><p class="paper-authors">&quot;Linli Yao, Yuancheng Wei, Yaojie Zhang, Lei Li, Xinlong Chen, Feifan Song, Ziyue Wang, Kun Ouyang, Yuanxin Liu, Lingpeng Kong&quot;</p><p class="paper-brief">提出&quot;全方位密集字幕&quot;任务和 TimeChat-Captioner-7B 模型，通过六维结构化描述生成电影剧本式的视频叙事，超越 Gemini-2.5-Pro。</p><div class="tags"><span class="tag">&quot;Video Understanding&quot;</span><span class="tag">&quot;Dense Captioning&quot;</span><span class="tag">&quot;GRPO&quot;</span><span class="tag">&quot;Multimodal&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.08711&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 05</div><h3 class="paper-title">&quot;iGRPO: Self-Feedback-Driven LLM Reasoning&quot;</h3><p class="paper-authors">&quot;Ali Hatamizadeh, Shrimai Prabhumoye, Igor Gitman, Ximing Lu, Seungju Han, Wei Ping, Yejin Choi, Jan Kautz&quot;</p><p class="paper-brief">iGRPO 是 GRPO 的两阶段迭代扩展，通过模型生成的草稿进行动态自条件化，在 AIME24/25 上达到新 SOTA（85.62%/79.64%）。</p><div class="tags"><span class="tag">&quot;RL&quot;</span><span class="tag">&quot;GRPO&quot;</span><span class="tag">&quot;Reasoning&quot;</span><span class="tag">&quot;Math&quot;</span><span class="tag">&quot;Self-Improvement&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.09000&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 06</div><h3 class="paper-title">&quot;Towards Autonomous Mathematics Research&quot;</h3><p class="paper-authors">&quot;Tony Feng, Trieu H. Trinh, Garrett Bingham, Dawsen Hwang, Yuri Chervonyi, Junehyuk Jung, Joonkyung Lee 等 (28 位作者)&quot;</p><p class="paper-brief">Google DeepMind 推出数学研究代理 Aletheia，基于 Gemini Deep Think 实现从竞赛级解题到专业数学研究的跨越，包括自主解决 4 个开放问题。</p><div class="tags"><span class="tag">&quot;Math Research&quot;</span><span class="tag">&quot;Agent&quot;</span><span class="tag">&quot;Autonomous Research&quot;</span><span class="tag">&quot;Gemini&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.10177&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 07</div><h3 class="paper-title">&quot;When to Memorize and When to Stop: Gated Recurrent Memory for Long-Context Reasoning&quot;</h3><p class="paper-authors">&quot;Leheng Sheng, Yongtao Zhang, Wenchang Ma, Yaorui Shi, Ting Huang, Xiang Wang, An Zhang, Ke Shen, Tat-Seng Chua&quot;</p><p class="paper-brief">GRU-Mem 通过引入更新门和退出门，解决了 MemAgent 在长上下文推理中记忆爆炸和不必要计算的问题，实现最高 400% 的推理加速。</p><div class="tags"><span class="tag">&quot;Long-Context&quot;</span><span class="tag">&quot;Memory&quot;</span><span class="tag">&quot;RL&quot;</span><span class="tag">&quot;Reasoning&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.10560&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 08</div><h3 class="paper-title">&quot;Step 3.5 Flash: Open Frontier-Level Intelligence with 11B Active Parameters&quot;</h3><p class="paper-authors">&quot;Ailin Huang, Ang Li, Aobo Kong, Bin Wang, Binxing Jiao 等 (200+ 位作者)&quot;</p><p class="paper-brief">Step 3.5 Flash 是一个 196B 参数、11B 活跃参数的稀疏 MoE 模型，通过可扩展的强化学习框架在数学、代码和工具使用上达到 GPT-5.2 xHigh 和 Gemini 3.0 Pro 水平。</p><div class="tags"><span class="tag">&quot;MoE&quot;</span><span class="tag">&quot;Agent&quot;</span><span class="tag">&quot;RL&quot;</span><span class="tag">&quot;Scaling&quot;</span><span class="tag">&quot;Reasoning&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.10604&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 09</div><h3 class="paper-title">&quot;PhyCritic: Multimodal Critic Models for Physical AI&quot;</h3><p class="paper-authors">&quot;Tianyi Xiong, Shihao Wang, Guilin Liu, Yi Dong, Ming Li, Heng Huang, Jan Kautz, Zhiding Yu&quot;</p><p class="paper-brief">PhyCritic 是一个专为物理 AI 任务优化的多模态评判模型，通过两阶段 RLVR 管线在物理感知、因果推理和规划任务上显著超越开源基线。</p><div class="tags"><span class="tag">&quot;Physical AI&quot;</span><span class="tag">&quot;Critic Model&quot;</span><span class="tag">&quot;RLVR&quot;</span><span class="tag">&quot;Multimodal&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.11124&quot;" target="_blank" rel="noopener">Read paper</a></article><article class="paper-card"><div class="paper-rank">TOP 10</div><h3 class="paper-title">&quot;GENIUS: Generative Fluid Intelligence Evaluation Suite&quot;</h3><p class="paper-authors">&quot;Ruichuan An, Sihan Yang, Ziyu Guo, Wei Dai, Zijun Shen, Haodong Li, Renrui Zhang, Xinyu Wei, Guopeng Li, Wenshan Wu, Wentao Zhang&quot;</p><p class="paper-brief">GENIUS 提出了一个评估统一多模态模型（UMM）&quot;生成式流体智力&quot;的基准，揭示现有模型在模式归纳、约束执行和上下文适应方面的显著不足。</p><div class="tags"><span class="tag">&quot;Benchmark&quot;</span><span class="tag">&quot;Multimodal&quot;</span><span class="tag">&quot;Visual Generation&quot;</span><span class="tag">&quot;Evaluation&quot;</span></div><a href="&quot;https://huggingface.co/papers/2602.11144&quot;" target="_blank" rel="noopener">Read paper</a></article></div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Focus Area</h2>
+      <article class="focus-card"><h3 class="focus-title">Agent RL / Scaling RL Deep Dive</h3><p>以下论文与 Agent RL / Scaling RL 相关，适合优先精读并跟踪可复现价值。</p><ul><li><strong>&quot;TimeChat-Captioner: Scripting Multi-Scene Videos with Time-Aware and Structural Audio-Visual Captions&quot;</strong>: 提出&quot;全方位密集字幕&quot;任务和 TimeChat-Captioner-7B 模型，通过六维结构化描述生成电影剧本式的视频叙事，超越 Gemini-2.5-Pro。</li><li><strong>&quot;iGRPO: Self-Feedback-Driven LLM Reasoning&quot;</strong>: iGRPO 是 GRPO 的两阶段迭代扩展，通过模型生成的草稿进行动态自条件化，在 AIME24/25 上达到新 SOTA（85.62%/79.64%）。</li><li><strong>&quot;When to Memorize and When to Stop: Gated Recurrent Memory for Long-Context Reasoning&quot;</strong>: GRU-Mem 通过引入更新门和退出门，解决了 MemAgent 在长上下文推理中记忆爆炸和不必要计算的问题，实现最高 400% 的推理加速。</li></ul></article>
+    </section>
+
+    <section>
+      <h2 class="section-title">Takeaway</h2>
+      <article class="takeaway"><ul><li>今日共筛选 <strong>10</strong> 篇论文，建议先读 TOP 3 获取全局脉络。</li><li>高频主题：<strong>&quot;Agent&quot;, &quot;Multimodal&quot;, &quot;RL&quot;</strong>。</li><li>第一优先论文：<strong>&quot;LatentLens: Revealing Highly Interpretable Visual Tokens in LLMs&quot;</strong>。</li></ul></article>
+    </section>
+
+    <footer>
+      <span>AI Daily archive terminal</span>
+      <a href="../../index.html">Return to Archive</a>
+    </footer>
+  </main>
+
+  <script>
+    const cards = document.querySelectorAll('.paper-card, .focus-card, .takeaway');
+    cards.forEach((card, idx) => {
+      card.style.animationDelay = `${Math.min(idx * 65, 640)}ms`;
+    });
+  </script>
+</body>
+</html>
