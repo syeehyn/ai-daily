@@ -10,18 +10,8 @@ export function TopNav() {
     <header className="sticky top-0 z-20 border-b border-border/70 bg-bg/85 backdrop-blur">
       <nav className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-4" aria-label="Main">
         <Link href="/" className="text-sm font-semibold tracking-tight hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent">
-          AI Daily v2
+          AI Daily
         </Link>
-        <div className="flex items-center gap-4 text-sm text-fgMuted">
-          <a
-            href="https://huggingface.co/papers"
-            target="_blank"
-            rel="noreferrer"
-            className="hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          >
-            HF Papers
-          </a>
-        </div>
       </nav>
     </header>
   );
@@ -116,7 +106,6 @@ export function FooterColumns() {
           <ul className="space-y-2 text-fgMuted">
             <li><a className="hover:text-fg" href="https://github.com">Repository</a></li>
             <li><a className="hover:text-fg" href="/">Archive</a></li>
-            <li><a className="hover:text-fg" href="https://huggingface.co/papers">Source feed</a></li>
           </ul>
         </div>
       </div>

@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { T } from "@/components/language";
 import { Button, Chip, FooterColumns } from "@/components/ui";
 import { getIssue, getIssues } from "@/lib/content";
 import { parseDigest } from "@/lib/digest";
@@ -19,16 +20,16 @@ export default async function IssuePage({ params }: { params: Promise<{ date: st
   return (
     <main className="mx-auto w-full max-w-5xl px-6 pb-16 pt-10">
       <article className="mx-auto max-w-3xl">
-        <p className="mb-3 text-xs uppercase tracking-[0.14em] text-fgMuted">Daily Brief · {issue.date}</p>
+        <p className="mb-3 text-xs uppercase tracking-[0.14em] text-fgMuted"><T zh="每日晨报" en="Daily Brief" /> · {issue.date}</p>
         <h1 className="text-4xl font-semibold tracking-tight">{issue.title}</h1>
-        <p className="mt-4 text-base text-fgMuted">给碎片时间的 AI 晨读：先看全局，再按 topic 深入。</p>
+        <p className="mt-4 text-base text-fgMuted"><T zh="给碎片时间的 AI 晨读：先看全局，再按 topic 深入。" en="Morning AI scan: macro first, then topic-by-topic details." /></p>
 
         <div className="mt-6">
-          <Button href="/" variant="ghost">Back to landing</Button>
+          <Button href="/" variant="ghost"><T zh="返回首页" en="Back to landing" /></Button>
         </div>
 
         <section className="mt-10 rounded-xl border border-border bg-bgMuted/40 p-6">
-          <h2 className="text-xl font-semibold">今日亮点</h2>
+          <h2 className="text-xl font-semibold"><T zh="今日亮点" en="Top highlights" /></h2>
           <div className="mt-4 space-y-3 text-fg">
             {digest.highlights.map((item, idx) => (
               <p key={idx} className="leading-7">{item}</p>
