@@ -1,5 +1,6 @@
 import { T } from "@/components/language";
 import { Button, Chip, FooterColumns } from "@/components/ui";
+import { enIssueTitle, enSummary, enTrend } from "@/lib/bilingual";
 import { getIssues } from "@/lib/content";
 import { parseDigest } from "@/lib/digest";
 
@@ -14,12 +15,18 @@ export default function HomePage() {
         <h1 className="max-w-3xl text-4xl font-semibold tracking-tight">
           <T zh="每天一张卡，先看全局，再按 topic 下钻。" en="One card each day: macro first, then topic deep dives." />
         </h1>
-        <p className="mt-4 max-w-2xl text-base text-fgMuted">{latest ? `${latest.date} · ${latest.title}` : "暂无当日数据"}</p>
+        <p className="mt-4 max-w-2xl text-base text-fgMuted">
+          {latest ? (
+            <T zh={`${latest.date} · ${latest.title}`} en={`${latest.date} · ${enIssueTitle(latest.date, latest.title)}`} />
+          ) : "暂无当日数据"}
+        </p>
 
         {latestDigest ? (
           <div className="mt-6 rounded-xl border border-border bg-bg p-5">
             <p className="text-sm uppercase tracking-[0.1em] text-fgMuted"><T zh="当日综述" en="Today summary" /></p>
-            <p className="mt-2 leading-7 text-fg">{latestDigest.highlights[0]}</p>
+            <p className="mt-2 leading-7 text-fg">
+              <T zh={latestDigest.highlights[0]} en={enTrend(latestDigest.highlights[0])} />
+            </p>
             <div className="mt-4 flex flex-wrap gap-2">
               <Chip>{latest.papers.length} <T zh="个主题" en="topics" /></Chip>
               <Chip><T zh="含 takeaways" en="takeaways included" /></Chip>
@@ -38,10 +45,10 @@ export default function HomePage() {
           <h2 className="text-2xl font-semibold"><T zh="趋势观察（详细）" en="Trend watch (detailed)" /></h2>
           <div className="mt-4 space-y-3">
             {latestDigest.trends.map((item, idx) => (
-              <p key={idx} className="leading-7 text-fg">• {item}</p>
+              <p key={idx} className="leading-7 text-fg">• <T zh={item} en={enTrend(item)} /></p>
             ))}
             {latestDigest.highlights.slice(1, 3).map((item, idx) => (
-              <p key={`h-${idx}`} className="leading-7 text-fgMuted">{item}</p>
+              <p key={`h-${idx}`} className="leading-7 text-fgMuted"><T zh={item} en={enTrend(item)} /></p>
             ))}
           </div>
         </section>
@@ -58,7 +65,9 @@ export default function HomePage() {
                 </div>
                 <h3 className="text-lg font-semibold leading-tight">{paper.title}</h3>
                 <p className="mt-2 text-sm text-fgMuted">{paper.authors}</p>
-                <p className="mt-3 line-clamp-4 leading-7 text-fg">{paper.summary}</p>
+                <p className="mt-3 line-clamp-4 leading-7 text-fg">
+                  <T zh={paper.summary} en={enSummary(paper)} />
+                </p>
                 <div className="mt-4">
                   <Button href={`/issues/${latest.date}/${paper.id}`} variant="ghost"><T zh="阅读全文" en="Read full note" /></Button>
                 </div>

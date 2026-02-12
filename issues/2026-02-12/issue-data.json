@@ -16,7 +16,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.00462",
       "markdown": "# LatentLens: 揭示 LLM 中高度可解释的视觉 Token\n\n## 一句话总结\nLatentLens 通过将视觉 token 的潜在表示与上下文化文本表示进行最近邻匹配，揭示了 VLM 中大多数视觉 token 在所有层都是可解释的。\n\n## 关键创新\n- **LatentLens 方法**：将潜在表示映射到自然语言描述的新方法\n- **上下文化文本表示匹配**：预先编码大量文本语料，存储上下文化 token 表示，用 KNN 匹配视觉 token\n- **推翻 LogitLens 结论**：证明 LogitLens 显著低估了视觉 token 的可解释性\n\n## 方法概述\nLatentLens 首先对大量文本语料进行编码，为每个 token 存储上下文化表示。然后将视觉 token 表示与这些文本表示进行比较，top-k 最近邻表示提供对视觉 token 的自然语言描述。该方法在 10 个不同 VLM 上进行了评估。\n\n## 主要结果\n- 在 10 个 VLM 上，大多数视觉 token 在所有层都是可解释的\n- 常用方法 LogitLens 显著低估了视觉 token 的可解释性\n- LatentLens 生成的描述语义有意义，比单个 token 提供更细粒度的解释\n\n## 复现指南\n- 需要大量文本语料用于构建表示库\n- 在标准 VLM（LLaVA 等）上运行\n- 计算开销主要在预编码文本语料阶段\n\n## 要点总结\n1. 视觉 token 在 LLM 中的可解释性被严重低估\n2. 上下文化表示比 logit 空间投影更能反映视觉 token 的语义\n3. 视觉-语言表示对齐比预想中更紧密\n4. 为分析 VLM 的内部表示开辟了新方向",
-      "image": "/issues/2026-02-12/assets/figures/2602.00462.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.04935",
@@ -31,7 +31,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.04935",
       "markdown": "# ASA: 面向工具调用代理的免训练表示工程\n\n## 一句话总结\nASA 发现 LLM 中间层已能完美解码工具使用意图但行为保守（\"懒惰代理\"问题），通过推理时单次中间层激活干预，仅需约 20KB 资产即可大幅提升工具调用 F1。\n\n## 关键创新\n- **懒惰代理（Lazy Agent）失败模式**：发现工具必要性在中间层激活中几乎完美可解码，但模型在进入工具模式时仍然保守\n- **激活引导适配器（ASA）**：无需训练的推理时控制器，执行单次中间层干预\n- **路由条件混合引导向量**：带有探针引导的符号门，放大真实意图同时抑制虚假触发\n\n## 方法概述\nASA 首先通过探针分析揭示了\"表示-行为鸿沟\"：模型中间层已知道何时需要使用工具，但行为上却过于保守。基于此发现，ASA 在推理时进行单次中间层激活干预，使用路由条件的引导向量混合和探针引导的符号门来精确控制工具调用行为。整个方法无需任何权重更新，仅需约 20KB 的便携资产。\n\n## 主要结果\n- 在 MTU-Bench + Qwen2.5-1.5B 上：\n  - 严格工具使用 F1 从 0.18 提升到 **0.50**\n  - 误报率从 0.15 降至 **0.05**\n- 仅需约 20KB 便携资产，无需权重更新\n\n## 复现指南\n- 基于 Qwen2.5 系列模型\n- 需要计算引导向量（少量标注数据即可）\n- 在 MTU-Bench 上评估\n- 推理时干预，计算开销极低\n\n## 要点总结\n1. \"懒惰代理\"问题是工具调用失败的关键原因\n2. 表示工程方法可以免训练地解决行为问题\n3. 20KB 资产即可实现显著提升，极其轻量\n4. 为代理系统的可靠工具调用开辟了新方向",
-      "image": "/issues/2026-02-12/assets/figures/2602.04935.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.08253",
@@ -46,7 +46,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.08253",
       "markdown": "# G-LNS: 基于 LLM 的生成式大邻域搜索自动启发式设计\n\n## 一句话总结\nG-LNS 提出了一个生成式进化框架，利用 LLM 协同进化 LNS 的破坏-修复算子对，在 TSP 和 CVRP 上显著超越现有 LLM AHD 方法和经典求解器。\n\n## 关键创新\n- **LNS 算子自动设计**：将 LLM 的自动启发式设计扩展到大邻域搜索算子\n- **破坏-修复算子协同进化**：LLM 同时进化紧密耦合的破坏和修复算子对\n- **协作评估机制**：显式捕获算子对之间的交互，发现互补的算子逻辑\n\n## 方法概述\nG-LNS 利用 LLM 作为生成器，在进化框架中同时设计大邻域搜索的破坏（destroy）和修复（repair）算子。与以往仅进化单一启发式的方法不同，G-LNS 通过协作评估机制捕获算子对之间的交互关系，使发现的算子在结构破坏和重建上形成互补。\n\n## 主要结果\n- 在 TSP 和 CVRP 基准上显著超越 LLM AHD 方法\n- 超越强经典求解器\n- 发现的启发式在更低计算预算下达到近最优解\n- 对不同和未见过的实例分布具有鲁棒泛化能力\n\n## 复现指南\n- 需要 LLM API 访问（用于算子生成）\n- 在标准 TSP/CVRP 基准上评估\n- 实现 LNS 框架 + 进化搜索循环\n\n## 要点总结\n1. LLM 不仅能写代码，还能设计组合优化算法\n2. 协同进化耦合算子比单独进化更有效\n3. LLM 生成的启发式可以超越手工设计的经典算法",
-      "image": "/issues/2026-02-12/assets/figures/2602.08253.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.08711",
@@ -61,7 +61,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.08711",
       "markdown": "# TimeChat-Captioner: 用时间感知的结构化音视觉字幕描述多场景视频\n\n## 一句话总结\n提出\"全方位密集字幕\"任务和 TimeChat-Captioner-7B 模型，通过六维结构化描述生成电影剧本式的视频叙事，超越 Gemini-2.5-Pro。\n\n## 关键创新\n- **全方位密集字幕（Omni Dense Captioning）**任务：生成带时间戳的连续、细粒度、结构化音视觉叙事\n- **六维结构化模式**：创建\"剧本式\"字幕，让读者能逐场景想象视频内容\n- **SodaM 统一评估指标**：评估时间感知的详细描述，同时缓解场景边界模糊性\n- **SFT + GRPO 训练**：结合监督微调和带任务特定奖励的 GRPO\n\n## 方法概述\n首先定义全方位密集字幕任务，要求模型生成带时间戳的结构化音视觉叙事。设计六维结构化模式，使字幕像电影剧本一样可读。构建了 OmniDCBench 人工标注基准和 TimeChatCap-42K 训练数据集。TimeChat-Captioner-7B 通过 SFT 和带任务特定奖励的 GRPO 训练，实现最先进性能。\n\n## 主要结果\n- 超越 **Gemini-2.5-Pro** 的密集字幕质量\n- 生成的密集描述显著提升下游音视觉推理（DailyOmni 和 WorldSense）\n- 在时序定位（Charades-STA）上也表现出色\n\n## 复现指南\n- 代码和数据集将在 GitHub 发布：https://github.com/yaolinli/TimeChat-Captioner\n- 基于 7B 规模模型，单卡可训练\n- 需要 TimeChatCap-42K 训练数据\n\n## 要点总结\n1. 视频理解从简单描述走向结构化剧本式叙事\n2. GRPO 在视频字幕任务中被成功应用\n3. 好的密集字幕可以显著提升下游任务性能",
-      "image": "/issues/2026-02-12/assets/figures/2602.08711.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.09000",
@@ -77,7 +77,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.09000",
       "markdown": "# iGRPO: 自反馈驱动的 LLM 推理\n\n## 一句话总结\niGRPO 是 GRPO 的两阶段迭代扩展，通过模型生成的草稿进行动态自条件化，在 AIME24/25 上达到新 SOTA（85.62%/79.64%）。\n\n## 关键创新\n- **两阶段迭代 GRPO**：在标准 GRPO 基础上增加自条件化精炼阶段\n- **动态自条件化**：Stage 1 采样多个探索性草稿并选择最佳；Stage 2 将最佳草稿附加到提示中进行精炼\n- **延迟熵崩塌**：精炼包装器改变了学习动态，延缓了策略的过早收敛\n\n## 方法概述\niGRPO 分两阶段工作。Stage 1：采样多个探索性草稿，使用与优化相同的标量奖励信号选择最高奖励的草稿。Stage 2：将最佳草稿附加到原始提示，对草稿条件化的精炼进行 GRPO 风格更新，训练策略超越其最强先前尝试。在匹配的 rollout 预算下，iGRPO 持续优于标准 GRPO。\n\n## 主要结果\n- 应用于 OpenReasoning-Nemotron-7B + AceReason-Math：\n  - AIME24: **85.62%** (新 SOTA)\n  - AIME25: **79.64%** (新 SOTA)\n- 在 Nemotron-H-8B-Base 和 DeepSeek-R1 Distilled 上均持续优于 GRPO\n- 精炼包装器泛化超越 GRPO 变体，受益于生成式评判\n\n## 复现指南\n- 基于 GRPO 框架扩展，需要实现两阶段训练\n- 核心修改在于 Stage 2 的草稿条件化\n- 在 AIME 等数学推理基准上评估\n- 需要足够的 rollout 预算\n\n## 要点总结\n1. 自反馈是提升 RL 推理训练效果的有效策略\n2. \"先探索后精炼\"范式优于直接优化\n3. 延迟熵崩塌是一个重要的学习动态改善\n4. 在 7B 规模模型上即可达到数学推理 SOTA",
-      "image": "/issues/2026-02-12/assets/figures/2602.09000.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.10177",
@@ -92,7 +92,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.10177",
       "markdown": "# 迈向自主数学研究\n\n## 一句话总结\nGoogle DeepMind 推出数学研究代理 Aletheia，基于 Gemini Deep Think 实现从竞赛级解题到专业数学研究的跨越，包括自主解决 4 个开放问题。\n\n## 关键创新\n- **数学研究代理 Aletheia**：迭代地生成、验证和修订端到端自然语言数学解决方案\n- **超越竞赛的推理时扩展定律**：将推理时 scaling 从竞赛问题扩展到研究级别\n- **自主数学研究里程碑**：AI 无人干预生成研究论文、人机协作证明、自主解决开放问题\n\n## 方法概述\nAletheia 由 Gemini Deep Think 增强版驱动，结合密集工具使用来导航数学研究的复杂性。系统能够迭代地生成解决方案、验证其正确性并修订错误。关键在于推理时 scaling 定律从竞赛级问题扩展到更开放的研究问题。\n\n## 主要结果\n- **AI 独立研究论文**：Feng26——AI 无人干预计算算术几何中的结构常数\n- **人机协作**：LeeSeo26——证明交互粒子系统（独立集）的界\n- **半自主评估**：评估了 Bloom 的 Erdős 猜想数据库中的 700 个开放问题\n- **自主解决 4 个开放问题**\n\n## 复现指南\n- 基于 Gemini Deep Think（非开源）\n- 需要专业数学领域的工具集成\n- 研究方向偏向方法论探讨，不易直接复现\n\n## 要点总结\n1. AI 数学研究从竞赛解题正式迈入专业研究领域\n2. 推理时 scaling 在开放研究问题上同样有效\n3. 提出了量化 AI 辅助研究自主性和新颖性的标准化水平\n4. 人机协作在数学研究中展现出巨大潜力",
-      "image": "/issues/2026-02-12/assets/figures/2602.10177.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.10560",
@@ -107,7 +107,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.10560",
       "markdown": "# GRU-Mem: 门控循环记忆实现长上下文推理\n\n## 一句话总结\nGRU-Mem 通过引入更新门和退出门，解决了 MemAgent 在长上下文推理中记忆爆炸和不必要计算的问题，实现最高 400% 的推理加速。\n\n## 关键创新\n- **文本控制的双门机制**：更新门决定何时更新记忆，退出门决定何时停止循环\n- **端到端 RL 奖励设计**：引入 r^{update} 和 r^{exit} 两个奖励信号，训练模型学会正确的更新和退出行为\n- **解决 MemAgent 的两个关键缺陷**：记忆无差别更新导致爆炸、缺乏退出机制导致多余计算\n\n## 方法概述\nGRU-Mem 在 MemAgent 的 RNN 式循环处理框架上增加了两个文本控制的门。更新门（update gate）控制记忆是否需要更新——当遇到无证据的上下文块时跳过更新，避免记忆爆炸。退出门（exit gate）在收集到足够证据后立即终止循环，避免不必要的计算。通过端到端强化学习，分别用 r^{update} 和 r^{exit} 奖励信号训练这两种正确行为。\n\n## 主要结果\n- 在多种长上下文推理任务上普遍优于原始 MemAgent\n- 最高实现 **400%** 推理速度加速\n- 在保持甚至提升准确性的同时大幅减少计算量\n\n## 复现指南\n- 基于 MemAgent 框架扩展\n- 需要实现双门机制和对应的 RL 训练\n- 奖励信号设计是关键：需要标注何时应更新记忆、何时应停止\n\n## 要点总结\n1. 长上下文推理的关键不仅是\"记什么\"，还有\"何时记\"和\"何时停\"\n2. GRU 风格的门控机制在文本记忆管理中非常有效\n3. RL 奖励设计可以教会模型高效的记忆管理策略\n4. 400% 加速说明大量长上下文推理存在不必要的计算浪费",
-      "image": "/issues/2026-02-12/assets/figures/2602.10560.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.10604",
@@ -123,7 +123,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.10604",
       "markdown": "# Step 3.5 Flash: 11B 活跃参数实现前沿级智能\n\n## 一句话总结\nStep 3.5 Flash 是一个 196B 参数、11B 活跃参数的稀疏 MoE 模型，通过可扩展的强化学习框架在数学、代码和工具使用上达到 GPT-5.2 xHigh 和 Gemini 3.0 Pro 水平。\n\n## 关键创新\n- **稀疏 MoE 架构**：196B 总参数中仅 11B 活跃参数，大幅降低推理成本\n- **3:1 滑动窗口/全注意力交错**：优化多轮代理交互的延迟\n- **Multi-Token Prediction (MTP-3)**：一次预测 3 个 token，加速生成\n- **可扩展 RL 框架**：结合可验证信号与偏好反馈，在大规模 off-policy 训练下保持稳定\n\n## 方法概述\n模型采用稀疏 Mixture-of-Experts 架构，以 11B 活跃参数实现高效推理。训练策略上，设计了一个结合验证信号（verifiable signals）和偏好反馈（preference feedback）的可扩展强化学习框架，在数学、代码和工具使用等任务上持续自我提升。推理优化方面，采用交错的 3:1 滑动窗口/全注意力机制和 MTP-3 多 token 预测，降低多轮代理交互的延迟和成本。\n\n## 主要结果\n- IMO-AnswerBench: **85.4%**\n- LiveCodeBench-v6 (2024.08-2025.05): **86.4%**\n- tau2-Bench: **88.2%**\n- BrowseComp (带上下文管理): **69.0%**\n- Terminal-Bench 2.0: **51.0%**\n- 性能与 GPT-5.2 xHigh 和 Gemini 3.0 Pro 等前沿模型相当\n\n## 复现指南\n- 模型为开源发布，可从 HuggingFace 获取\n- 需要支持 MoE 推理的框架（如 vLLM、SGLang 等）\n- 推荐使用多 GPU 部署（196B 总参数需要足够显存）\n- MTP-3 推理需要特殊的解码策略支持\n\n## 要点总结\n1. 稀疏 MoE + RL 自我提升的组合路线被验证有效\n2. 11B 活跃参数即可达到前沿水平，重新定义效率前沿\n3. 代理（Agent）能力是核心设计目标，不仅仅是基准测试\n4. 为工业级实际部署复杂代理提供了高密度基础",
-      "image": "/issues/2026-02-12/assets/figures/2602.10604.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.11124",
@@ -138,7 +138,7 @@
       ],
       "url": "https://huggingface.co/papers/2602.11124",
       "markdown": "# PhyCritic: 面向物理 AI 的多模态评判模型\n\n## 一句话总结\nPhyCritic 是一个专为物理 AI 任务优化的多模态评判模型，通过两阶段 RLVR 管线在物理感知、因果推理和规划任务上显著超越开源基线。\n\n## 关键创新\n- **两阶段 RLVR 管线**：物理技能预热 + 自参考评判微调\n- **自参考评判机制**：评判前先生成内部参考预测，再判断候选响应，提升判断稳定性\n- **物理 AI 专用评估**：填补了现有评判模型在物理感知和因果推理领域的空白\n\n## 方法概述\nPhyCritic 采用两阶段训练。第一阶段为物理技能预热（Physical Skill Warmup），增强物理导向的感知和推理能力。第二阶段为自参考评判微调（Self-Referential Critic Finetuning），模型在判断候选响应之前，先生成自己的预测作为内部参考，从而提高判断的稳定性和物理正确性。\n\n## 主要结果\n- 在物理和通用多模态评判基准上均取得显著性能提升\n- 超越开源基线模型\n- 当作为策略模型使用时，进一步提升物理接地任务中的感知和推理能力\n\n## 复现指南\n- 基于大型多模态模型（如 LLaVA 系列）构建\n- 需要物理 AI 相关的训练数据集\n- RLVR 训练框架需要可验证奖励信号\n\n## 要点总结\n1. RLVR 在评判模型训练中被证明非常有效\n2. 自参考机制是一个通用的评判质量提升策略\n3. 物理 AI 是多模态模型的重要但被忽视的领域\n4. 评判模型反过来可以提升策略模型的能力",
-      "image": "/issues/2026-02-12/assets/figures/2602.11124.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     },
     {
       "id": "2602.11144",
@@ -153,13 +153,13 @@
       ],
       "url": "https://huggingface.co/papers/2602.11144",
       "markdown": "# GENIUS: 生成式流体智力评估套件\n\n## 一句话总结\nGENIUS 提出了一个评估统一多模态模型（UMM）\"生成式流体智力\"的基准，揭示现有模型在模式归纳、约束执行和上下文适应方面的显著不足。\n\n## 关键创新\n- **生成式流体智力（GFI）**概念：区别于依赖已有知识的\"结晶智力\"，关注模型在新场景中即时推理和适应的能力\n- **三原语形式化**：归纳隐式模式、执行临时约束、适应上下文知识\n- **无训练注意力干预策略**：无需训练即可提升模型的上下文理解能力\n\n## 方法概述\n将生成式流体智力分解为三个基本能力原语：（1）归纳隐式模式——如推断个性化视觉偏好；（2）执行临时约束——如将抽象隐喻可视化；（3）适应上下文知识——如模拟反直觉物理。基准测试中，系统评估了 12 个代表性模型，并通过诊断分析区分了失败模式的来源。\n\n## 主要结果\n- 12 个代表性模型在 GFI 任务上表现显著不足\n- 诊断分析表明缺陷源于有限的上下文理解能力，而非生成能力不足\n- 提出的无训练注意力干预策略可有效缩小差距\n\n## 复现指南\n- 数据集和代码将在 GitHub 发布：https://github.com/arctanxarc/GENIUS\n- 评估需要支持视觉生成的统一多模态模型\n- 可在标准 GPU 上运行评估流水线\n\n## 要点总结\n1. 现有 VLM 评估过度关注\"记忆\"能力，忽视了即时推理\n2. 模型的生成能力并不差，瓶颈在于上下文理解\n3. 为多模态模型评估开辟了新维度",
-      "image": "/issues/2026-02-12/assets/figures/2602.11144.svg"
+      "image": "/issues/2026-02-12/assets/figures/2602.png"
     }
   ],
   "x_snapshot": {
     "date": "2026-02-12",
     "source": "mock",
-    "generated_at": "2026-02-12T18:58:26.619872+00:00",
+    "generated_at": "2026-02-12T19:48:05.518343+00:00",
     "config": {
       "influencer_handles": [
         "sama",
@@ -203,7 +203,7 @@
             "impression_count": 530000
           },
           "url": "https://x.com/karpathy/status/100002",
-          "score": 7182.88
+          "score": 7182.87
         },
         {
           "id": "100001",
@@ -219,7 +219,7 @@
             "impression_count": 410000
           },
           "url": "https://x.com/sama/status/100001",
-          "score": 6137.79
+          "score": 6137.78
         },
         {
           "id": "100003",
@@ -235,7 +235,7 @@
             "impression_count": 210000
           },
           "url": "https://x.com/AndrewYNg/status/100003",
-          "score": 3276.83
+          "score": 3276.82
         }
       ],
       "热门话题": [
@@ -245,7 +245,7 @@
           "lead_text": "RLVR runs show better long-context stability than pure SFT in our internal evals.",
           "lead_url": "https://x.com/lab_notes/status/200002",
           "lead_handle": "lab_notes",
-          "score": 2368.26
+          "score": 2368.25
         },
         {
           "query": "agentic AI OR autonomous agents lang:en -is:retweet",
@@ -261,7 +261,7 @@
           "lead_text": "Test-time compute budgets are now discussed in product planning meetings, not just research review.",
           "lead_url": "https://x.com/research_ops/status/200003",
           "lead_handle": "research_ops",
-          "score": 1637.42
+          "score": 1637.41
         }
       ],
       "今日关键观点": [
@@ -294,7 +294,7 @@
             "impression_count": 530000
           },
           "url": "https://x.com/karpathy/status/100002",
-          "score": 7182.88
+          "score": 7182.87
         },
         {
           "id": "100001",
@@ -310,7 +310,7 @@
             "impression_count": 410000
           },
           "url": "https://x.com/sama/status/100001",
-          "score": 6137.79
+          "score": 6137.78
         },
         {
           "id": "100003",
@@ -326,7 +326,7 @@
             "impression_count": 210000
           },
           "url": "https://x.com/AndrewYNg/status/100003",
-          "score": 3276.83
+          "score": 3276.82
         }
       ],
       "topic_posts": [
@@ -345,7 +345,7 @@
             "impression_count": 150000
           },
           "url": "https://x.com/lab_notes/status/200002",
-          "score": 2368.26
+          "score": 2368.25
         },
         {
           "id": "200001",
@@ -379,11 +379,11 @@
             "impression_count": 98000
           },
           "url": "https://x.com/research_ops/status/200003",
-          "score": 1637.42
+          "score": 1637.41
         }
       ]
     }
   },
-  "generated_at": "2026-02-12T19:23:09.598920+00:00",
+  "generated_at": "2026-02-12T19:48:09.606908+00:00",
   "schema_version": "2.0"
 }

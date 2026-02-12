@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { T } from "@/components/language";
 import { Button, Chip, FooterColumns } from "@/components/ui";
+import { enIssueTitle, enSummary, enTrend } from "@/lib/bilingual";
 import { getIssue, getIssues } from "@/lib/content";
 import { parseDigest } from "@/lib/digest";
 
@@ -21,7 +22,9 @@ export default async function IssuePage({ params }: { params: Promise<{ date: st
     <main className="mx-auto w-full max-w-5xl px-6 pb-16 pt-10">
       <article className="mx-auto max-w-3xl">
         <p className="mb-3 text-xs uppercase tracking-[0.14em] text-fgMuted"><T zh="每日晨报" en="Daily Brief" /> · {issue.date}</p>
-        <h1 className="text-4xl font-semibold tracking-tight">{issue.title}</h1>
+        <h1 className="text-4xl font-semibold tracking-tight">
+          <T zh={issue.title} en={enIssueTitle(issue.date, issue.title)} />
+        </h1>
         <p className="mt-4 text-base text-fgMuted"><T zh="给碎片时间的 AI 晨读：先看全局，再按 topic 深入。" en="Morning AI scan: macro first, then topic-by-topic details." /></p>
 
         <div className="mt-6">
@@ -32,7 +35,7 @@ export default async function IssuePage({ params }: { params: Promise<{ date: st
           <h2 className="text-xl font-semibold"><T zh="今日亮点" en="Top highlights" /></h2>
           <div className="mt-4 space-y-3 text-fg">
             {digest.highlights.map((item, idx) => (
-              <p key={idx} className="leading-7">{item}</p>
+              <p key={idx} className="leading-7"><T zh={item} en={enTrend(item)} /></p>
             ))}
           </div>
         </section>
@@ -47,7 +50,7 @@ export default async function IssuePage({ params }: { params: Promise<{ date: st
                 </div>
                 <h3 className="text-lg font-semibold leading-tight">{paper.title}</h3>
                 <p className="mt-2 text-sm text-fgMuted">{paper.authors}</p>
-                <p className="mt-3 leading-7 text-fg">{paper.summary}</p>
+                <p className="mt-3 leading-7 text-fg"><T zh={paper.summary} en={enSummary(paper)} /></p>
                 <div className="mt-4">
                   <Button href={`/issues/${issue.date}/${paper.id}`}>阅读全文</Button>
                 </div>
@@ -60,7 +63,7 @@ export default async function IssuePage({ params }: { params: Promise<{ date: st
           <section className="mt-10 rounded-xl border border-border bg-bgMuted/30 p-6">
             <h2 className="text-xl font-semibold">趋势观察</h2>
             <ul className="mt-4 list-disc space-y-2 pl-6 text-fg">
-              {digest.trends.map((item, idx) => <li key={idx}>{item}</li>)}
+              {digest.trends.map((item, idx) => <li key={idx}><T zh={item} en={enTrend(item)} /></li>)}
             </ul>
           </section>
         ) : null}
