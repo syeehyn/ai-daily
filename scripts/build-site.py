@@ -19,6 +19,7 @@ ARCHIVE_START = "<!-- ARCHIVE_LIST_START -->"
 ARCHIVE_END = "<!-- ARCHIVE_LIST_END -->"
 ISSUE_DATE_RE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
 URL_RE = re.compile(r'https?://[^\s)>"]+')
+PAPER_ID_RE = re.compile(r"(\d{4}\.\d{4,5}(?:v\d+)?)")
 
 FOCUS_KEYWORDS = {
     "agent rl",
@@ -34,6 +35,43 @@ FOCUS_KEYWORDS = {
 
 def escape(value: str) -> str:
     return html.escape(value or "", quote=True)
+
+
+def strip_wrapping_quotes(value: str) -> str:
+    value = (value or "").strip()
+    if len(value) >= 2 and value[0] == value[-1] and value[0] in {'"', "'"}:
+        return value[1:-1].strip()
+    return value
+
+
+def clean_markdown_text(text: str) -> str:
+    text = strip_wrapping_quotes(text)
+    text = re.sub(r"\[(.*?)\]\([^)]+\)", r"\1", text)
+    text = re.sub(r"\*\*(.*?)\*\*", r"\1", text)
+    text = re.sub(r"\*(.*?)\*", r"\1", text)
+    text = re.sub(r"`(.*?)`", r"\1", text)
+    return re.sub(r"\s+", " ", text).strip()
+
+
+def extract_paper_id(*values: str) -> str:
+    for value in values:
+        match = PAPER_ID_RE.search(value or "")
+        if match:
+            return match.group(1)
+    return ""
+
+
+def build_hf_paper_link(path: Path, raw_link: str, body: str) -> str:
+    cleaned = strip_wrapping_quotes(raw_link)
+    paper_id = extract_paper_id(path.stem, cleaned, body)
+    if paper_id:
+        return f"https://huggingface.co/papers/{paper_id}"
+
+    if cleaned and "huggingface.co/papers/" in cleaned:
+        return cleaned
+    if cleaned:
+        return cleaned
+    return ""
 
 
 def is_issue_dir(path: Path) -> bool:
@@ -62,7 +100,7 @@ def parse_front_matter(text: str) -> Tuple[Dict[str, str], str]:
             break
         if ":" in line:
             key, val = line.split(":", 1)
-            front[key.strip().lower()] = val.strip()
+            front[key.strip().lower()] = strip_wrapping_quotes(val.strip())
 
     if end_idx is None:
         return {}, text
@@ -76,14 +114,14 @@ def read_markdown(path: Path) -> Dict[str, object]:
     front, body = parse_front_matter(text)
     lines = body.splitlines()
 
-    title = front.get("title", "").strip()
+    title = strip_wrapping_quotes(front.get("title", "").strip())
     if not title:
         for line in lines:
             if line.strip().startswith("#"):
                 title = line.lstrip("# ").strip()
                 break
 
-    authors = front.get("authors", "").strip()
+    authors = strip_wrapping_quotes(front.get("authors", "").strip())
     tags_raw = front.get("tags", "").strip()
     link = (front.get("link") or front.get("url") or "").strip()
     summary = (
@@ -93,12 +131,23 @@ def read_markdown(path: Path) -> Dict[str, object]:
         or front.get("one_sentence_summary")
         or ""
     ).strip()
+    summary = strip_wrapping_quotes(summary)
+
+    sections: Dict[str, List[str]] = {}
+    current_section = ""
 
     paragraphs: List[str] = []
     current = []
     for raw in lines:
         line = raw.strip()
         lower = line.lower()
+        if line.startswith("## "):
+            current_section = clean_markdown_text(line[3:].strip()).lower()
+            sections.setdefault(current_section, [])
+            continue
+        if current_section:
+            sections[current_section].append(line)
+
         if not line:
             if current:
                 paragraphs.append(" ".join(current).strip())
@@ -106,20 +155,20 @@ def read_markdown(path: Path) -> Dict[str, object]:
             continue
 
         if lower.startswith("authors:") and not authors:
-            authors = line.split(":", 1)[1].strip()
+            authors = strip_wrapping_quotes(line.split(":", 1)[1].strip())
             continue
         if lower.startswith("tags:") and not tags_raw:
             tags_raw = line.split(":", 1)[1].strip()
             continue
         if lower.startswith("link:") and not link:
-            link = line.split(":", 1)[1].strip()
+            link = strip_wrapping_quotes(line.split(":", 1)[1].strip())
             continue
 
         if line.startswith("#"):
             continue
 
         if not summary and (lower.startswith("summary:") or lower.startswith("brief:")):
-            summary = line.split(":", 1)[1].strip()
+            summary = strip_wrapping_quotes(line.split(":", 1)[1].strip())
             continue
 
         current.append(line)
@@ -134,6 +183,7 @@ def read_markdown(path: Path) -> Dict[str, object]:
         url_match = URL_RE.search(body)
         if url_match:
             link = url_match.group(0)
+    link = build_hf_paper_link(path, link, body)
 
     if not title:
         title = path.stem.replace("-", " ").title()
@@ -146,10 +196,13 @@ def read_markdown(path: Path) -> Dict[str, object]:
     if not tags:
         tags = infer_tags_from_text(" ".join([title, summary, body]))
 
+    insights = build_paper_insights(summary=summary, body=body, sections=sections, tags=tags)
+
     return {
         "title": title,
         "authors": authors,
         "summary": summary,
+        "insights": insights,
         "tags": tags,
         "link": link,
         "path": path,
@@ -165,7 +218,8 @@ def parse_tags(tags_raw: str) -> List[str]:
         items = [t.strip() for t in tags_raw.split(",")]
     else:
         items = [t.strip() for t in tags_raw.split()]
-    return [tag for tag in items if tag]
+    cleaned = [strip_wrapping_quotes(tag) for tag in items if tag]
+    return [tag for tag in cleaned if tag]
 
 
 def infer_tags_from_text(text: str) -> List[str]:
@@ -188,27 +242,127 @@ def infer_tags_from_text(text: str) -> List[str]:
 
 
 def safe_excerpt(text: str, max_len: int = 160) -> str:
-    text = re.sub(r"\s+", " ", text).strip()
+    text = clean_markdown_text(text)
     if len(text) <= max_len:
         return text
     return text[: max_len - 1].rstrip() + "…"
 
 
+def section_content(sections: Dict[str, List[str]], keys: List[str]) -> List[str]:
+    values: List[str] = []
+    for heading, lines in sections.items():
+        if any(key in heading for key in keys):
+            values.extend(lines)
+    return values
+
+
+def extract_bullets(lines: List[str], max_items: int = 3) -> List[str]:
+    items: List[str] = []
+    for raw in lines:
+        line = raw.strip()
+        if not line:
+            continue
+        if line.startswith(("- ", "* ")):
+            item = clean_markdown_text(line[2:])
+            if item:
+                if item.endswith(("：", ":")):
+                    continue
+                items.append(item)
+        elif re.match(r"^\d+\.\s+", line):
+            item = clean_markdown_text(re.sub(r"^\d+\.\s+", "", line))
+            if item:
+                if item.endswith(("：", ":")):
+                    continue
+                items.append(item)
+        if len(items) >= max_items:
+            break
+    return items
+
+
+def extract_paragraph(lines: List[str]) -> str:
+    text = " ".join(clean_markdown_text(line) for line in lines if line.strip() and not line.startswith(("-", "* ")))
+    return safe_excerpt(text, 170)
+
+
+def build_insight(label: str, text: str) -> str:
+    return f"{label}：{safe_excerpt(text, 170)}"
+
+
+def build_paper_insights(summary: str, body: str, sections: Dict[str, List[str]], tags: List[str]) -> List[str]:
+    one_sentence_lines = section_content(sections, ["一句话", "one sentence"])
+    innovation_lines = section_content(sections, ["关键创新", "innovation"])
+    method_lines = section_content(sections, ["方法概述", "method"])
+    result_lines = section_content(sections, ["主要结果", "result"])
+    takeaway_lines = section_content(sections, ["要点总结", "takeaway"])
+
+    one_sentence = clean_markdown_text(" ".join(one_sentence_lines)) or clean_markdown_text(summary)
+    innovation_bullets = extract_bullets(innovation_lines, max_items=2)
+    result_bullets = extract_bullets(result_lines, max_items=2)
+    takeaway_bullets = extract_bullets(takeaway_lines, max_items=2)
+    method_text = extract_paragraph(method_lines)
+
+    insights: List[str] = []
+    if one_sentence:
+        insights.append(build_insight("问题", one_sentence))
+
+    if innovation_bullets:
+        insights.append(build_insight("方法", "；".join(innovation_bullets)))
+    elif method_text:
+        insights.append(build_insight("方法", method_text))
+
+    if result_bullets:
+        insights.append(build_insight("结果", "；".join(result_bullets)))
+    else:
+        fallback = extract_paragraph(result_lines)
+        if fallback:
+            insights.append(build_insight("结果", fallback))
+
+    if takeaway_bullets:
+        insights.append(build_insight("意义", "；".join(takeaway_bullets)))
+    else:
+        focus = "、".join(tags[:3]) if tags else "前沿 Agent / RL 研究"
+        insights.append(build_insight("意义", f"该工作对 {focus} 方向具有直接参考价值。"))
+
+    supplements = innovation_bullets + takeaway_bullets + result_bullets
+    for item in supplements:
+        if len(insights) >= 5:
+            break
+        clean = clean_markdown_text(item)
+        if clean and all(clean not in existing for existing in insights):
+            insights.append(build_insight("补充", clean))
+
+    if len(insights) < 3:
+        fallback = safe_excerpt(clean_markdown_text(body), 160)
+        if fallback:
+            insights.append(build_insight("补充", fallback))
+
+    return insights[:5]
+
+
 def build_paper_card(paper: Dict[str, object], rank: int) -> str:
     tags = paper.get("tags", []) or []
     tags_html = "".join(f'<span class="tag">{escape(str(tag))}</span>' for tag in tags)
+    insights = paper.get("insights", []) or []
+    insights_html = "".join(f"<li>{escape(str(item))}</li>" for item in insights[:5])
     link = str(paper.get("link") or "").strip()
     if link:
-        link_html = f'<a href="{escape(link)}" target="_blank" rel="noopener">Read paper</a>'
+        link_html = (
+            '<p class="paper-link">'
+            f'<a href="{escape(link)}" target="_blank" rel="noopener">Open on Hugging Face Papers</a>'
+            "</p>"
+        )
     else:
-        link_html = '<span class="paper-authors">Link pending</span>'
+        link_html = '<p class="paper-link"><span class="paper-authors">Link pending</span></p>'
 
     return (
-        '<article class="paper-card">'
-        f'<div class="paper-rank">TOP {rank:02d}</div>'
+        '<article class="paper-card" aria-label="paper-entry">'
+        '<header class="paper-header">'
+        f'<div class="paper-rank">Paper {rank:02d}</div>'
         f'<h3 class="paper-title">{escape(str(paper["title"]))}</h3>'
+        "</header>"
         f'<p class="paper-authors">{escape(str(paper["authors"]))}</p>'
-        f'<p class="paper-brief">{escape(safe_excerpt(str(paper["summary"]), 180))}</p>'
+        f'<p class="paper-brief">{escape(safe_excerpt(str(paper["summary"]), 240))}</p>'
+        f'<ul class="paper-insights">{insights_html}</ul>'
         f'<div class="tags">{tags_html}</div>'
         f"{link_html}"
         "</article>"
@@ -288,7 +442,7 @@ def render_issue_page(issue_date: str, papers: List[Dict[str, object]], template
         "PAGE_TITLE": f"AI Daily {issue_date}",
         "DATE": issue_date,
         "PAPER_COUNT": str(len(papers)),
-        "TAGLINE": "Frontier AI Papers, Curated Like A Sci-Fi Journal",
+        "TAGLINE": "Frontier AI Papers, Curated as an Editorial Daily Brief",
         "TOP_PAPERS": cards,
         "FOCUS_AREA": build_focus_section(top_papers),
         "TAKEAWAYS": build_takeaways(top_papers),

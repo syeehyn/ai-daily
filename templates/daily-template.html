@@ -7,246 +7,355 @@
   <meta name="description" content="AI Daily {{DATE}} 论文精选" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-0: #060b1c;
-      --bg-1: #0d1230;
-      --bg-2: #151d46;
-      --text: #f4f7ff;
-      --muted: #9caad6;
-      --accent-cyan: #56ffe0;
-      --accent-neon: #6dff8b;
-      --accent-violet: #9b78ff;
-      --glass: rgba(255, 255, 255, 0.07);
-      --glass-border: rgba(109, 255, 139, 0.28);
-      --shadow: 0 20px 50px rgba(4, 12, 40, 0.65);
-      --radius: 18px;
+      --bg: #f7f5f1;
+      --surface: #fffdf8;
+      --ink: #171717;
+      --muted: #55514a;
+      --line: #d9d2c7;
+      --accent: #9e4b23;
+      --accent-soft: #f2e4d8;
+      --radius: 14px;
+      --shadow: 0 8px 30px rgba(25, 20, 12, 0.06);
+      --reading: 72ch;
     }
 
     * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      color: var(--text);
-      font-family: "Space Grotesk", sans-serif;
+      color: var(--ink);
+      font-family: "IBM Plex Sans", "PingFang SC", "Noto Sans CJK SC", sans-serif;
+      line-height: 1.78;
       background:
-        radial-gradient(circle at 15% 15%, rgba(86, 255, 224, 0.15), transparent 35%),
-        radial-gradient(circle at 85% 20%, rgba(155, 120, 255, 0.2), transparent 35%),
-        linear-gradient(165deg, var(--bg-0), var(--bg-1) 55%, var(--bg-2));
-      min-height: 100vh;
-      line-height: 1.6;
+        radial-gradient(circle at 12% 8%, #efe7db, transparent 35%),
+        radial-gradient(circle at 84% 14%, #ece5db, transparent 38%),
+        var(--bg);
     }
 
-    .shell {
-      max-width: 1160px;
+    .page {
+      max-width: 1180px;
       margin: 0 auto;
-      padding: 24px 18px 60px;
+      padding: 34px 18px 72px;
     }
 
-    .hero {
-      position: relative;
-      overflow: hidden;
-      border-radius: 24px;
-      padding: 26px 24px;
-      margin-bottom: 22px;
-      background: linear-gradient(120deg, rgba(9, 15, 45, 0.9), rgba(30, 35, 80, 0.75));
-      border: 1px solid rgba(86, 255, 224, 0.3);
-      box-shadow: var(--shadow);
-    }
-
-    .hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at 75% 15%, rgba(109, 255, 139, 0.24), transparent 38%);
-      pointer-events: none;
+    .masthead {
+      border-top: 3px solid var(--accent);
+      padding-top: 16px;
+      margin-bottom: 30px;
     }
 
     .eyebrow {
-      font-family: "JetBrains Mono", monospace;
-      color: var(--accent-cyan);
-      font-size: 0.82rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
       margin: 0 0 10px;
+      font-family: "IBM Plex Mono", monospace;
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.8rem;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(1.8rem, 3.6vw, 3rem);
-      line-height: 1.15;
+      font-family: "IBM Plex Serif", "Noto Serif CJK SC", serif;
+      font-size: clamp(2rem, 4.3vw, 3.45rem);
+      line-height: 1.1;
+      letter-spacing: -0.01em;
+      max-width: 18ch;
     }
 
-    .hero-meta {
+    .masthead-meta {
+      margin-top: 16px;
       display: flex;
-      gap: 16px;
+      gap: 14px;
       flex-wrap: wrap;
-      margin-top: 14px;
       color: var(--muted);
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.88rem;
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.86rem;
     }
 
-    .hero-meta strong { color: var(--accent-neon); }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 320px;
+      gap: 26px;
+      align-items: start;
+    }
 
     .section-title {
-      font-size: 1.28rem;
-      margin: 28px 0 14px;
-      letter-spacing: 0.03em;
+      margin: 0 0 12px;
+      font-family: "IBM Plex Serif", "Noto Serif CJK SC", serif;
+      font-size: clamp(1.35rem, 2vw, 1.72rem);
+      line-height: 1.25;
+      letter-spacing: -0.01em;
     }
 
-    .papers-grid {
-      display: grid;
-      gap: 16px;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    .section-title::after {
+      content: "";
+      display: block;
+      width: 70px;
+      height: 2px;
+      margin-top: 7px;
+      background: var(--accent);
     }
 
-    .paper-card,
-    .focus-card,
-    .takeaway {
-      background: var(--glass);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(8px);
-      opacity: 0;
-      transform: translateY(16px);
-      animation: fadeIn 0.65s ease forwards;
+    .paper-list {
+      max-width: 100%;
     }
 
     .paper-card {
-      padding: 18px;
-      border-color: var(--glass-border);
-      transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 22px 24px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(10px);
+      animation: fadeIn 460ms ease forwards;
     }
 
-    .paper-card:hover {
-      transform: translateY(-6px);
-      border-color: var(--accent-cyan);
-      box-shadow: 0 0 0 1px rgba(86, 255, 224, 0.55), 0 24px 42px rgba(3, 8, 30, 0.8);
+    .paper-header {
+      margin-bottom: 6px;
     }
 
     .paper-rank {
-      font-family: "JetBrains Mono", monospace;
-      color: var(--accent-neon);
-      font-size: 0.78rem;
-      margin-bottom: 8px;
+      color: var(--accent);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
     }
 
     .paper-title {
-      font-size: 1.04rem;
-      margin: 0 0 7px;
-      line-height: 1.35;
+      margin: 0;
+      font-family: "IBM Plex Serif", "Noto Serif CJK SC", serif;
+      font-size: clamp(1.24rem, 2.2vw, 1.58rem);
+      line-height: 1.28;
+      max-width: var(--reading);
     }
 
-    .paper-authors,
-    .paper-brief { margin: 0 0 10px; color: var(--muted); font-size: 0.94rem; }
+    .paper-authors {
+      margin: 8px 0;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
 
-    .tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 11px; }
+    .paper-brief {
+      margin: 0 0 10px;
+      max-width: var(--reading);
+      font-size: 1rem;
+    }
+
+    .paper-insights {
+      margin: 0 0 12px;
+      padding-left: 1.15rem;
+      max-width: var(--reading);
+    }
+
+    .paper-insights li {
+      margin-bottom: 6px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
 
     .tag {
-      font-family: "JetBrains Mono", monospace;
-      font-size: 0.73rem;
-      padding: 2px 8px;
-      border: 1px solid rgba(155, 120, 255, 0.5);
+      font-family: "IBM Plex Mono", monospace;
+      font-size: 0.74rem;
+      border: 1px solid var(--line);
+      background: #fcf7ef;
+      color: #6b3f27;
       border-radius: 999px;
-      color: #d8cdff;
-      background: rgba(155, 120, 255, 0.14);
+      padding: 2px 10px;
     }
 
     a {
-      color: var(--accent-cyan);
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(86, 255, 224, 0.45);
+      color: #8f3a18;
+      text-decoration-color: rgba(159, 77, 37, 0.48);
+      text-underline-offset: 2px;
+      transition: color 180ms ease, text-decoration-color 180ms ease;
     }
 
-    a:hover { color: var(--accent-neon); border-bottom-color: rgba(109, 255, 139, 0.75); }
+    a:hover {
+      color: #6b280f;
+      text-decoration-color: rgba(107, 40, 15, 0.78);
+    }
+
+    .paper-link {
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 18px;
+      display: grid;
+      gap: 14px;
+    }
 
     .focus-card,
     .takeaway {
-      padding: 20px;
-      margin-top: 10px;
-    }
-
-    .focus-card {
-      border-color: rgba(109, 255, 139, 0.44);
-      background: linear-gradient(140deg, rgba(18, 27, 59, 0.66), rgba(20, 54, 54, 0.43));
+      margin: 0;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
     }
 
     .focus-title {
       margin: 0 0 8px;
-      color: var(--accent-neon);
-      font-size: 1.08rem;
-      letter-spacing: 0.03em;
+      font-family: "IBM Plex Serif", "Noto Serif CJK SC", serif;
+      font-size: 1.12rem;
+      line-height: 1.3;
     }
 
-    .takeaway {
-      border-color: rgba(86, 255, 224, 0.42);
-      background: linear-gradient(140deg, rgba(20, 30, 70, 0.7), rgba(32, 23, 66, 0.5));
+    .focus-card p,
+    .takeaway p,
+    .focus-card li,
+    .takeaway li {
+      margin: 0 0 6px;
+      color: #2a2825;
+      font-size: 0.95rem;
     }
 
+    .focus-card ul,
     .takeaway ul {
-      margin: 8px 0 0;
+      margin: 0;
       padding-left: 1.1rem;
-      color: #dbe4ff;
+    }
+
+    blockquote {
+      margin: 12px 0;
+      padding: 8px 14px;
+      border-left: 3px solid var(--accent);
+      background: var(--accent-soft);
+      border-radius: 6px;
+      color: #3a2f27;
+      font-style: italic;
+    }
+
+    pre,
+    code {
+      font-family: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    pre {
+      margin: 12px 0;
+      padding: 12px;
+      overflow-x: auto;
+      background: #f2ede5;
+      border: 1px solid #ded3c5;
+      border-radius: 8px;
+      line-height: 1.5;
+    }
+
+    code {
+      background: #f3ede3;
+      border: 1px solid #e4d8c8;
+      border-radius: 4px;
+      padding: 0 4px;
+      font-size: 0.92em;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      font-size: 0.94rem;
+    }
+
+    th,
+    td {
+      border-bottom: 1px solid var(--line);
+      padding: 7px 8px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      font-family: "IBM Plex Serif", "Noto Serif CJK SC", serif;
+      font-weight: 600;
     }
 
     footer {
-      margin-top: 30px;
+      margin-top: 34px;
       padding-top: 16px;
-      border-top: 1px solid rgba(255, 255, 255, 0.16);
+      border-top: 1px solid var(--line);
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 12px;
       flex-wrap: wrap;
+      gap: 10px;
       color: var(--muted);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
     }
 
     @keyframes fadeIn {
-      to { opacity: 1; transform: translateY(0); }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
-    @media (max-width: 720px) {
-      .shell { padding: 16px 14px 40px; }
-      .hero { padding: 18px 16px; border-radius: 18px; }
-      .section-title { font-size: 1.12rem; }
-      .paper-card,
-      .focus-card,
-      .takeaway { border-radius: 14px; }
+    @media (max-width: 980px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        position: static;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 24px 14px 52px;
+      }
+
+      .paper-card {
+        padding: 18px 16px;
+      }
     }
   </style>
 </head>
 <body>
-  <main class="shell">
-    <section class="hero">
-      <p class="eyebrow">AI DAILY / SCI-FI EDITION</p>
+  <main class="page">
+    <header class="masthead">
+      <p class="eyebrow">AI Daily / Longform Digest</p>
       <h1>{{TAGLINE}}</h1>
-      <div class="hero-meta">
-        <span>DATE <strong>{{DATE}}</strong></span>
-        <span>PAPERS <strong>{{PAPER_COUNT}}</strong></span>
+      <div class="masthead-meta">
+        <span>DATE {{DATE}}</span>
+        <span>PAPERS {{PAPER_COUNT}}</span>
       </div>
-    </section>
+    </header>
 
-    <section>
-      <h2 class="section-title">Top 10 Papers</h2>
-      <div class="papers-grid">{{TOP_PAPERS}}</div>
-    </section>
+    <div class="layout">
+      <section class="paper-list">
+        <h2 class="section-title">Top 10 Papers</h2>
+        {{TOP_PAPERS}}
+      </section>
 
-    <section>
-      <h2 class="section-title">Focus Area</h2>
-      <article class="focus-card">{{FOCUS_AREA}}</article>
-    </section>
+      <aside class="sidebar">
+        <section>
+          <h2 class="section-title">Focus Area</h2>
+          <article class="focus-card">{{FOCUS_AREA}}</article>
+        </section>
 
-    <section>
-      <h2 class="section-title">Takeaway</h2>
-      <article class="takeaway">{{TAKEAWAYS}}</article>
-    </section>
+        <section>
+          <h2 class="section-title">Takeaways</h2>
+          <article class="takeaway">{{TAKEAWAYS}}</article>
+        </section>
+      </aside>
+    </div>
 
     <footer>
-      <span>AI Daily archive terminal</span>
+      <span>AI Daily archive</span>
       <a href="../../index.html">Return to Archive</a>
     </footer>
   </main>
@@ -254,7 +363,7 @@
   <script>
     const cards = document.querySelectorAll('.paper-card, .focus-card, .takeaway');
     cards.forEach((card, idx) => {
-      card.style.animationDelay = `${Math.min(idx * 65, 640)}ms`;
+      card.style.animationDelay = `${Math.min(idx * 45, 420)}ms`;
     });
   </script>
 </body>
